@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function TabLayout() {
   return (
@@ -16,6 +17,18 @@ export default function TabLayout() {
         },
       }}
     >
+      <Tabs.Screen
+        name="log-mood"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <AntDesign
+              name={focused ? "pluscircle" : "pluscircleo"}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
