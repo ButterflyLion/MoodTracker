@@ -18,27 +18,47 @@ const CENTER_X = width / 2;
 const CENTER_Y = height / 2;
 
 export default function MoodTrackerScreen() {
+  // Start dot in the middle of the graph
   const translateX = useSharedValue(GRAPH_SIZE / 2);
   const translateY = useSharedValue(GRAPH_SIZE / 2);
 
-  const dragGesture = Gesture.Pan().onUpdate((event) => {
-    translateX.value = withSpring(event.translationX + GRAPH_SIZE / 2);
-    translateY.value = withSpring(event.translationY + GRAPH_SIZE / 2);
-  });
+  const offsetX = useSharedValue(GRAPH_SIZE / 2);
+  const offsetY = useSharedValue(GRAPH_SIZE / 2);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value - 10 }, // Centering the point
-      { translateY: translateY.value - 10 },
-    ],
-  }));
+  const dragGesture = Gesture.Pan().onUpdate((event) => {
+      translateX.value = Math.max(
+        0,
+        Math.min(offsetX.value + event.translationX, GRAPH_SIZE)
+      );
+      translateY.value = Math.max(
+        0,
+        Math.min(offsetY.value + event.translationY, GRAPH_SIZE)
+      );
+    })
+    .onEnd(() => {
+      offsetX.value = translateX.value;
+      offsetY.value = translateY.value;
+    });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: translateX.value - GRAPH_SIZE / 2,
+        },
+        {
+          translateY: translateY.value - GRAPH_SIZE / 2,
+        },
+      ],
+    };
+  });
 
   return (
     <GestureHandlerRootView style={styles.container}>
       <Text style={styles.title}>Mood Tracker</Text>
 
       {/* Graph */}
-      <View style={styles.graphContainer}>
+      <Animated.View style={styles.graphContainer}>
         <Svg width={GRAPH_SIZE} height={GRAPH_SIZE}>
           {/* X-Axis (Valence) */}
           <Line
@@ -60,7 +80,7 @@ export default function MoodTrackerScreen() {
           />
 
           {/* Labels */}
-          <SvgText x={GRAPH_SIZE - 40} y={GRAPH_SIZE / 2 - 10} fontSize="16">
+          <SvgText x={GRAPH_SIZE - 70} y={GRAPH_SIZE / 2 - 10} fontSize="16">
             Positive
           </SvgText>
           <SvgText x={10} y={GRAPH_SIZE / 2 - 10} fontSize="16">
@@ -78,7 +98,7 @@ export default function MoodTrackerScreen() {
         <GestureDetector gesture={dragGesture}>
           <Animated.View style={[styles.draggablePoint, animatedStyle]} />
         </GestureDetector>
-      </View>
+      </Animated.View>
     </GestureHandlerRootView>
   );
 }
