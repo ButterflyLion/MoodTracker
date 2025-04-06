@@ -1,9 +1,11 @@
 import { Text, View, StyleSheet } from "react-native";
+import OtterDisplay from "../../components/OtterDisplay";
 
 export default function About() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>About screen</Text>
+      <OtterDisplay />
+      <Text style={styles.text}>About</Text>
     </View>
   );
 }
