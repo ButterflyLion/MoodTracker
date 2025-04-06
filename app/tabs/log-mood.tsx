@@ -14,6 +14,7 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
+  interpolateColor,
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
@@ -22,14 +23,14 @@ const { width, height } = Dimensions.get("window");
 const GRAPH_SIZE = Math.min(width, height) * 0.8;
 
 const PLEASANT = "#E1DE47";
-const PLEASANT_2 = "#D5D365";
+const MEDIUM_PLEASANTNESS = "#D5D365";
 const NEUTRAL_PLEASANTNESS = "#BCA5A1";
-const UNPLEASANT_2 = "#A377DD";
+const MEDIUM_UNPLEASANTNESS = "#A377DD";
 const UNPLEASANT = "#8F53DD";
 const HIGH_AROUSAL = "#E05300";
-const HIGH_AROUSAL_2 = "#DC6B2A";
+const MEDIUM_HIGH_AROUSAL = "#DC6B2A";
 const NEUTRAL_AROUSAL = "#A88E80";
-const LOW_AROUSAL_2 = "#74B0D5";
+const MEDIUM_LOW_AROUSAL = "#74B0D5";
 const LOW_AROUSAL = "#9FBBCD";
 
 export default function MoodTrackerScreen() {
@@ -68,6 +69,46 @@ export default function MoodTrackerScreen() {
     };
   });
 
+  const dotColour = useAnimatedStyle(() => {
+    // Normalize translateX and translateY to a range of 0 to 1
+    const normalizedX = translateX.value / GRAPH_SIZE;
+    const normalizedY = translateY.value / GRAPH_SIZE;
+
+    const pleasantnessColour = interpolateColor(
+      normalizedX,
+      [0, 0.25, 0.5, 0.75, 1],
+      [
+        UNPLEASANT,
+        MEDIUM_UNPLEASANTNESS,
+        NEUTRAL_PLEASANTNESS,
+        MEDIUM_PLEASANTNESS,
+        PLEASANT,
+      ]
+    );
+
+    const arousalColour = interpolateColor(
+      normalizedY,
+      [0, 0.25, 0.5, 0.75, 1],
+      [
+        HIGH_AROUSAL,
+        MEDIUM_HIGH_AROUSAL,
+        NEUTRAL_AROUSAL,
+        MEDIUM_LOW_AROUSAL,
+        LOW_AROUSAL,
+      ]
+    );
+
+    const colour = interpolateColor(
+      0.5,
+      [0, 1],
+      [pleasantnessColour, arousalColour]
+    );
+
+    return {
+      backgroundColor: colour,
+    };
+  });
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <Text style={styles.title}>Mood Tracker</Text>
@@ -86,7 +127,7 @@ export default function MoodTrackerScreen() {
               y2="50%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-              <Stop offset="50%" stopColor={PLEASANT_2} />
+              <Stop offset="50%" stopColor={MEDIUM_PLEASANTNESS} />
               <Stop offset="100%" stopColor={PLEASANT} />
             </LinearGradient>
             <LinearGradient
@@ -97,7 +138,7 @@ export default function MoodTrackerScreen() {
               y2="0%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-              <Stop offset="50%" stopColor={HIGH_AROUSAL_2} />
+              <Stop offset="50%" stopColor={MEDIUM_HIGH_AROUSAL} />
               <Stop offset="100%" stopColor={HIGH_AROUSAL} />
             </LinearGradient>
 
@@ -110,7 +151,7 @@ export default function MoodTrackerScreen() {
               y2="50%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-              <Stop offset="50%" stopColor={UNPLEASANT_2} />
+              <Stop offset="50%" stopColor={MEDIUM_UNPLEASANTNESS} />
               <Stop offset="100%" stopColor={UNPLEASANT} />
             </LinearGradient>
             <LinearGradient
@@ -121,7 +162,7 @@ export default function MoodTrackerScreen() {
               y2="0%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-              <Stop offset="50%" stopColor={HIGH_AROUSAL_2} />
+              <Stop offset="50%" stopColor={MEDIUM_HIGH_AROUSAL} />
               <Stop offset="100%" stopColor={HIGH_AROUSAL} />
             </LinearGradient>
 
@@ -134,7 +175,7 @@ export default function MoodTrackerScreen() {
               y2="50%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-              <Stop offset="50%" stopColor={UNPLEASANT_2} />
+              <Stop offset="50%" stopColor={MEDIUM_UNPLEASANTNESS} />
               <Stop offset="100%" stopColor={UNPLEASANT} />
             </LinearGradient>
             <LinearGradient
@@ -145,7 +186,7 @@ export default function MoodTrackerScreen() {
               y2="100%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-              <Stop offset="50%" stopColor={LOW_AROUSAL_2} />
+              <Stop offset="50%" stopColor={MEDIUM_LOW_AROUSAL} />
               <Stop offset="100%" stopColor={LOW_AROUSAL} />
             </LinearGradient>
 
@@ -158,7 +199,7 @@ export default function MoodTrackerScreen() {
               y2="50%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-              <Stop offset="50%" stopColor={PLEASANT_2} />
+              <Stop offset="50%" stopColor={MEDIUM_PLEASANTNESS} />
               <Stop offset="100%" stopColor={PLEASANT} />
             </LinearGradient>
             <LinearGradient
@@ -169,7 +210,7 @@ export default function MoodTrackerScreen() {
               y2="100%"
             >
               <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-              <Stop offset="50%" stopColor={LOW_AROUSAL_2} />
+              <Stop offset="50%" stopColor={MEDIUM_LOW_AROUSAL} />
               <Stop offset="100%" stopColor={LOW_AROUSAL} />
             </LinearGradient>
           </Defs>
@@ -281,7 +322,9 @@ export default function MoodTrackerScreen() {
 
         {/* Draggable Point */}
         <GestureDetector gesture={dragGesture}>
-          <Animated.View style={[styles.draggablePoint, animatedStyle]} />
+          <Animated.View
+            style={[styles.draggablePoint, animatedStyle, dotColour]}
+          />
         </GestureDetector>
       </Animated.View>
     </GestureHandlerRootView>
@@ -310,9 +353,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   draggablePoint: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderColor: "#000",
+    borderWidth: 3,
     backgroundColor: "red",
     position: "absolute",
   },
