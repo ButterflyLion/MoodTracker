@@ -1,5 +1,6 @@
-import React from "react";
-import { Text, StyleSheet, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, StyleSheet, Dimensions, View, Platform } from "react-native";
+import Slider from "@react-native-community/slider";
 import Svg, {
   Line,
   Text as SvgText,
@@ -17,6 +18,7 @@ import Animated, {
   interpolateColor,
   useSharedValue,
   useAnimatedStyle,
+  withSpring,
 } from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
@@ -34,6 +36,7 @@ const MEDIUM_LOW_AROUSAL = "#74B0D5";
 const LOW_AROUSAL = "#9FBBCD";
 
 export default function MoodTrackerScreen() {
+  const [isClient, setIsClient] = useState(false);
   // Start dot in the middle of the graph
   const translateX = useSharedValue(GRAPH_SIZE / 2);
   const translateY = useSharedValue(GRAPH_SIZE / 2);
@@ -41,15 +44,25 @@ export default function MoodTrackerScreen() {
   const offsetX = useSharedValue(GRAPH_SIZE / 2);
   const offsetY = useSharedValue(GRAPH_SIZE / 2);
 
-  const dragGesture = Gesture.Pan().onUpdate((event) => {
-      translateX.value = Math.max(
+  const pleasantness = useSharedValue(0.5);
+  const arousal = useSharedValue(0.5);
+
+  const dragGesture = Gesture.Pan()
+    .onUpdate((event) => {
+      const newX = Math.max(
         0,
         Math.min(offsetX.value + event.translationX, GRAPH_SIZE)
       );
-      translateY.value = Math.max(
+      const newY = Math.max(
         0,
         Math.min(offsetY.value + event.translationY, GRAPH_SIZE)
       );
+
+      translateX.value = newX;
+      translateY.value = newY;
+
+      pleasantness.value = newX / GRAPH_SIZE;
+      arousal.value = newY / GRAPH_SIZE;
     })
     .onEnd(() => {
       offsetX.value = translateX.value;
@@ -70,12 +83,8 @@ export default function MoodTrackerScreen() {
   });
 
   const dotColour = useAnimatedStyle(() => {
-    // Normalize translateX and translateY to a range of 0 to 1
-    const normalizedX = translateX.value / GRAPH_SIZE;
-    const normalizedY = translateY.value / GRAPH_SIZE;
-
     const pleasantnessColour = interpolateColor(
-      normalizedX,
+      pleasantness.value,
       [0, 0.25, 0.5, 0.75, 1],
       [
         UNPLEASANT,
@@ -87,7 +96,7 @@ export default function MoodTrackerScreen() {
     );
 
     const arousalColour = interpolateColor(
-      normalizedY,
+      arousal.value,
       [0, 0.25, 0.5, 0.75, 1],
       [
         HIGH_AROUSAL,
@@ -109,13 +118,24 @@ export default function MoodTrackerScreen() {
     };
   });
 
+  const updateGraphFromSliders = () => {
+    translateX.value = withSpring(pleasantness.value * GRAPH_SIZE);
+    translateY.value = withSpring(arousal.value * GRAPH_SIZE);
+  };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (Platform.OS === "web" && !isClient) {
+    return null; // Prevents server-side rendering issues on web
+  }
+
   return (
     <GestureHandlerRootView style={styles.container}>
-      <Text style={styles.title}>Mood Tracker</Text>
-
       {/* Graph */}
       <Animated.View style={styles.graphContainer}>
-        <Svg width={GRAPH_SIZE} height={GRAPH_SIZE}>
+        <Svg viewBox={`0 0 ${GRAPH_SIZE} ${GRAPH_SIZE}`}>
           {/* Quadrant-Based Gradients */}
           <Defs>
             {/* Top-Right Quadrant */}
@@ -327,6 +347,37 @@ export default function MoodTrackerScreen() {
           />
         </GestureDetector>
       </Animated.View>
+
+      {/* Sliders */}
+      <View style={styles.slidersContainer}>
+        <Text style={styles.sliderLabel}>Pleasantness</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={1}
+          value={pleasantness.value}
+          minimumTrackTintColor={UNPLEASANT}
+          maximumTrackTintColor={PLEASANT}
+          onValueChange={(value) => {
+            pleasantness.value = value;
+            updateGraphFromSliders();
+          }}
+        />
+
+        <Text style={styles.sliderLabel}>Arousal</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={1}
+          value={arousal.value}
+          minimumTrackTintColor={LOW_AROUSAL}
+          maximumTrackTintColor={HIGH_AROUSAL}
+          onValueChange={(value) => {
+            arousal.value = value;
+            updateGraphFromSliders();
+          }}
+        />
+      </View>
     </GestureHandlerRootView>
   );
 }
@@ -336,7 +387,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#74D4E5",
   },
   title: {
     fontSize: 24,
@@ -360,5 +411,19 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     backgroundColor: "red",
     position: "absolute",
+  },
+  slidersContainer: {
+    width: "80%",
+    marginTop: 20,
+  },
+  slider: {
+    width: "100%",
+    height: 40,
+    marginBottom: 20,
+  },
+  sliderLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });
