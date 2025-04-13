@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {Text, StyleSheet, Dimensions, View, Platform, ScrollView } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  Dimensions,
+  View,
+  Platform,
+  ScrollView,
+} from "react-native";
 import Slider from "@react-native-community/slider";
 import Svg, {
   Line,
@@ -19,6 +26,8 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   useDerivedValue,
+  useAnimatedReaction,
+  runOnJS,
 } from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
@@ -47,15 +56,31 @@ export default function MoodTrackerScreen() {
   const offsetX = useSharedValue(GRAPH_SIZE / 2);
   const offsetY = useSharedValue(GRAPH_SIZE / 2);
 
-  const [pleasantness, setPleasantness] = useState(0.5);
-  const [arousal, setArousal] = useState(0.5);
+  const pleasantness = useDerivedValue(() => translateX.value / GRAPH_SIZE);
+  const arousal = useDerivedValue(() => translateY.value / GRAPH_SIZE);
 
-  useDerivedValue(() => {
-    setPleasantness(translateX.value / GRAPH_SIZE);
-    setArousal(translateY.value / GRAPH_SIZE);
-  });
+  const [pleasantnessState, setPleasantnessState] = useState(0.5);
+  const [arousalState, setArousalState] = useState(0.5);
+
+  useAnimatedReaction(
+    () => pleasantness.value,
+    (pleasantnessValue) => {
+      runOnJS(setPleasantnessState)(pleasantnessValue);
+    }
+  );
+
+  useAnimatedReaction(
+    () => arousal.value,
+    (arousalValue) => {
+      runOnJS(setArousalState)(arousalValue);
+    }
+  );
 
   const dragGesture = Gesture.Pan()
+    .onStart(() => {
+      offsetX.value = translateX.value;
+      offsetY.value = translateY.value;
+    })
     .onUpdate((event) => {
       const newX = Math.max(
         0,
@@ -89,7 +114,7 @@ export default function MoodTrackerScreen() {
 
   const dotColour = useAnimatedStyle(() => {
     const pleasantnessColour = interpolateColor(
-      pleasantness,
+      pleasantness.value,
       [0, 0.25, 0.5, 0.75, 1],
       [
         UNPLEASANT,
@@ -101,7 +126,7 @@ export default function MoodTrackerScreen() {
     );
 
     const arousalColour = interpolateColor(
-      arousal,
+      arousal.value,
       [0, 0.25, 0.5, 0.75, 1],
       [
         HIGH_AROUSAL,
@@ -370,12 +395,12 @@ export default function MoodTrackerScreen() {
             style={styles.slider}
             minimumValue={0}
             maximumValue={1}
-            value={pleasantness}
+            value={pleasantnessState}
             minimumTrackTintColor={UNPLEASANT}
             maximumTrackTintColor={PLEASANT}
             onValueChange={(value) => {
-              setPleasantness(value);
-              updateGraphFromSliders(value, arousal);
+              translateX.value = value * GRAPH_SIZE;
+              updateGraphFromSliders(value, arousal.value);
             }}
           />
 
@@ -384,12 +409,13 @@ export default function MoodTrackerScreen() {
             style={styles.slider}
             minimumValue={0}
             maximumValue={1}
-            value={arousal}
+            value={1 - arousalState}
             minimumTrackTintColor={LOW_AROUSAL}
             maximumTrackTintColor={HIGH_AROUSAL}
             onValueChange={(value) => {
-              setArousal(value);
-              updateGraphFromSliders(pleasantness, value);
+              const invertedValue = 1 - value;
+              translateY.value = invertedValue * GRAPH_SIZE;
+              updateGraphFromSliders(pleasantness.value, invertedValue);
             }}
           />
         </View>
