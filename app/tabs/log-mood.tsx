@@ -76,8 +76,11 @@ export default function MoodTrackerScreen() {
     }
   );
 
+  const isDragging = useSharedValue(false);
+
   const dragGesture = Gesture.Pan()
     .onStart(() => {
+      isDragging.value = true;
       offsetX.value = translateX.value;
       offsetY.value = translateY.value;
     })
@@ -95,6 +98,7 @@ export default function MoodTrackerScreen() {
       translateY.value = newY;
     })
     .onEnd(() => {
+      isDragging.value = false;
       offsetX.value = translateX.value;
       offsetY.value = translateY.value;
     });
