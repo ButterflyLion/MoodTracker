@@ -8,10 +8,11 @@ export default function OtterDisplay() {
       <View style={styles.otterIllustrationWrapper}>
         <OtterIllustration />
       </View>
-      <View style={styles.contentContainer} />
     </View>
   );
 }
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   otterDisplay: {
@@ -19,17 +20,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
+    right: screenWidth * 0.2,
   },
   otterIllustrationWrapper: {
-    marginBottom: 20,
-  },
-  contentContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    minHeight: Dimensions.get("window").height,
-    backgroundColor: "#ffffff",
-    padding: 20,
+    height: screenHeight,
+    margin: 10,
     width: "100%",
   },
 });
