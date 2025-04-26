@@ -6,24 +6,12 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { useFonts } from "expo-font";
 import OtterDisplay from "@/components/OtterDisplay";
 import StartButton from "@/components/StartButton";
 
 export default function HomeScreen() {
-  const [fontsLoaded] = useFonts({
-    Jua: require("@/assets/fonts/Jua-Regular.ttf"),
-  });
-
   return (
     <View style={styles.container}>
-      {!fontsLoaded && (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      )}
       <View style={styles.greetings}>
         <View style={styles.textWrapper}>
           <Text style={styles.title}>Hello there!</Text>
@@ -38,7 +26,7 @@ export default function HomeScreen() {
         <StartButton
           text="Journal"
           onPress={() => {
-            // TODO: Navigate to the journaling screen
+            // TODO: Navigate to the tracking screen
           }}
         />
         <StartButton
@@ -65,7 +53,6 @@ const styles = StyleSheet.create({
     right: screenWidth * 0.15,
     top: "50%",
     zIndex: 1,
-    padding: 10,
   },
   textWrapper: {
     padding: 10,
