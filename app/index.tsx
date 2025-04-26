@@ -1,15 +1,24 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Dimensions,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, Dimensions, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { getColours } from "@/assets/utils/colour-utils";
 import OtterDisplay from "@/components/OtterDisplay";
 import StartButton from "@/components/StartButton";
 
 export default function HomeScreen() {
+  const router = useRouter();
+
+  const handleLogMoodPress = () => {
+    getColours().then((trackerColours) => {
+      if (trackerColours !== null) {
+        router.push("/tabs/log-mood");
+        console.log(trackerColours);
+      } else {
+        router.push("/colour-picker");
+      }
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.greetings}>
@@ -17,12 +26,7 @@ export default function HomeScreen() {
           <Text style={styles.title}>Hello there!</Text>
           <Text style={styles.subtitle}>What would you like to do?</Text>
         </View>
-        <StartButton
-          text="Log my mood"
-          onPress={() => {
-            // TODO: Navigate to the mood tracking screen
-          }}
-        />
+        <StartButton text="Log my mood" onPress={handleLogMoodPress} />
         <StartButton
           text="Journal"
           onPress={() => {
