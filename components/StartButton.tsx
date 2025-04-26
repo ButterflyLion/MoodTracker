@@ -3,33 +3,31 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
-  View,
   StyleSheet,
   GestureResponderEvent,
 } from "react-native";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-
-const aspectRatio = 228 / 49;
-
-const maxWidth = screenWidth * 0.5;
+const maxWidth = screenWidth * 0.4;
 const maxHeight = screenHeight * 0.1;
-const width = Math.min(maxWidth, maxHeight * aspectRatio);
-const height = width / aspectRatio;
+
+const fontSize = Math.min(maxWidth * 0.1, 50);
+const borderWidth = Math.min(maxWidth * 0.015, 7);
+const borderRadius = Math.min(maxWidth * 0.05, 20);
 
 interface Props {
   onPress?: (event: GestureResponderEvent) => void;
   text: string;
 }
 
-export default function LogMoodButton({ onPress, text }: Props) {
+export default function StartButton({ onPress, text }: Props) {
+  console.log("Max width: ", maxWidth);
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <View style={styles.background} />
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
@@ -40,25 +38,18 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
-    borderWidth: screenWidth * 0.005,
+    borderRadius: borderRadius,
+    borderWidth: borderWidth,
     borderColor: "#000",
-    backgroundColor: "#h",
     position: "relative",
-    margin: screenHeight * 0.015,
-    maxWidth: width,
-    maxHeight: height,
-  },
-  background: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
+    margin: 10,
+    maxWidth: maxWidth,
+    maxHeight: maxHeight,
     backgroundColor: "#C7F0FF",
   },
   text: {
     fontFamily: "Jua",
-    fontSize: screenWidth * 0.04,
+    fontSize: fontSize,
     color: "#000",
     textAlign: "center",
     position: "relative",

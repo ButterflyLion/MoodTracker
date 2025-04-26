@@ -17,14 +17,11 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const styles = StyleSheet.create({
   otterDisplay: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
     width: "100%",
-    right: screenWidth * 0.2,
+    right: "15%",
   },
   otterIllustrationWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
+    position: "absolute",
     height: screenHeight,
     margin: 10,
     width: "100%",

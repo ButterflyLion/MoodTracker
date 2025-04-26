@@ -47,6 +47,10 @@ export default function HomeScreen() {
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const maxWidth = screenWidth * 0.5;
+
+const titleFontSize = Math.min(maxWidth * 0.1, 75);
+const subtitleFontSize = Math.min(maxWidth * 0.075, 50);
 
 const styles = StyleSheet.create({
   container: {
@@ -54,9 +58,9 @@ const styles = StyleSheet.create({
   },
   greetings: {
     position: "absolute",
-    right: screenWidth * 0.15,
-    top: "50%",
+    top: "45%",
     zIndex: 1,
+    left: "45%",
   },
   textWrapper: {
     padding: 10,
@@ -64,20 +68,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Jua",
-    fontSize: screenWidth * 0.07,
+    fontSize: titleFontSize,
     fontWeight: "bold",
     marginBottom: 5,
     color: "#000",
   },
   subtitle: {
     fontFamily: "Jua",
-    fontSize: screenWidth * 0.04,
+    fontSize: subtitleFontSize,
     color: "#555",
-  },
-  button: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#007BFF",
-    borderRadius: 5,
   },
 });
