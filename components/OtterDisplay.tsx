@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   otterIllustrationWrapper: {
     position: "absolute",
-    height: screenHeight,
+    top: "15%",
     margin: 10,
     width: "100%",
   },

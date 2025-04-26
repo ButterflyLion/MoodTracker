@@ -6,6 +6,7 @@ import {
   Modal,
   StyleSheet,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import ColorPicker, {
   Panel1,
@@ -13,6 +14,7 @@ import ColorPicker, {
   HueSlider,
 } from "reanimated-color-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ColourPickerButton from "@/components/ColourPickerButton";
 
 const ColoursContext = createContext(null);
 
@@ -40,33 +42,23 @@ export const ColoursProvider = ({ children }) => {
       {children}
     </ColoursContext.Provider>
   );
-}
+};
+
 export const useColours = () => {
   const context = useContext(ColoursContext);
   if (!context) {
     throw new Error("useColours must be used within a ColoursProvider");
   }
   return context;
-}
+};
 
 export default function MoodTrackerColourPicker() {
-
   const [colors, setColors] = useState({
     highArousal: "",
     lowArousal: "",
     pleasant: "",
     unpleasant: "",
   });
-
-  const getColours = async () => {
-    const storedColors = await AsyncStorage.getItem("trackerColors");
-    if (storedColors !== null) {
-      setColors(JSON.parse(storedColors));
-    }
-  };
-  useEffect(() => {
-    getColours();
-  }, []);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -96,13 +88,13 @@ export default function MoodTrackerColourPicker() {
 
       {Object.entries(colors).map(([key, value]) => (
         <View key={key} style={styles.option}>
-          <Button
-            title={`Pick for ${key}`}
+          <ColourPickerButton
+            title={`${key}`}
             onPress={() => {
               setActiveKey(key as keyof typeof colors);
               setShowModal(true);
             }}
-            color={value}
+            colour={value}
           />
         </View>
       ))}
@@ -138,6 +130,10 @@ export default function MoodTrackerColourPicker() {
   );
 }
 
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+
+const fontSize = Math.min(screenWidth * 0.06, 70);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -146,12 +142,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 22,
     marginVertical: 20,
+    fontFamily: "Jua",
+    fontSize: fontSize,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#000",
   },
   option: {
+    display: "flex",
+    position: "relative",
     marginVertical: 10,
-    width: "100%",
+    alignSelf: "center",
   },
   buttonContainer: {
     marginTop: 30,
