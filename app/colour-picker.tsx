@@ -18,33 +18,33 @@ import ColourPickerButton from "@/components/ColourPickerButton";
 import ModalButton from "@/components/ModalButton";
 
 export default function MoodTrackerColourPicker() {
-  const [colors, setColors] = useState({
-    highArousal: "",
-    lowArousal: "",
-    pleasant: "",
-    unpleasant: "",
+  const [colours, setColours] = useState({
+    highArousal: "#FFFFFF",
+    lowArousal: "#FFFFFF",
+    pleasant: "#FFFFFF",
+    unpleasant: "#FFFFFF",
   });
 
   const [showModal, setShowModal] = useState(false);
 
-  const handleColorChange = (color: string) => {
-    setColors((prev) => ({
+  const handleColourChange = (colour: string) => {
+    setColours((prev) => ({
       ...prev,
-      [activeKey]: color,
+      [activeKey]: colour,
     }));
   };
 
-  const onSelectColor = ({ hex }: { hex: string }) => {
+  const onSelectColour = ({ hex }: { hex: string }) => {
     "worklet";
-    handleColorChange(hex);
+    handleColourChange(hex);
     console.log(hex);
   };
 
   const [activeKey, setActiveKey] =
-    useState<keyof typeof colors>("highArousal");
+    useState<keyof typeof colours>("highArousal");
 
-  const saveColor = async () => {
-    await AsyncStorage.setItem("themeColors", JSON.stringify(colors));
+  const saveColour = async () => {
+    await AsyncStorage.setItem("themeColours", JSON.stringify(colours));
   };
 
   const cancelColour = () => {
@@ -55,12 +55,12 @@ export default function MoodTrackerColourPicker() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Customize Your Mood Colours</Text>
 
-      {Object.entries(colors).map(([key, value]) => (
+      {Object.entries(colours).map(([key, value]) => (
         <View key={key} style={styles.option}>
           <ColourPickerButton
             title={`${key}`}
             onPress={() => {
-              setActiveKey(key as keyof typeof colors);
+              setActiveKey(key as keyof typeof colours);
               setShowModal(true);
             }}
             colour={value}
@@ -79,7 +79,7 @@ export default function MoodTrackerColourPicker() {
         <View style={styles.modalBackground}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Pick a colour</Text>
-            <ColorPicker value={colors[activeKey]} onComplete={onSelectColor}>
+            <ColorPicker value={colours[activeKey]} onComplete={onSelectColour}>
               <View style={styles.modalComponent}>
                 <Panel1 />
               </View>
@@ -102,9 +102,9 @@ export default function MoodTrackerColourPicker() {
               />
               <ModalButton
                 type="select"
-                colour={colors[activeKey]}
+                colour={colours[activeKey]}
                 onPress={() => {
-                  saveColor();
+                  saveColour();
                   setShowModal(false);
                 }}
               />
@@ -159,10 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
     elevation: 5, // For Android shadow
   },
   modalTitle: {

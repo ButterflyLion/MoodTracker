@@ -47,7 +47,7 @@ export default function App() {
     <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="colour-picker" options={{ headerShown: false }} />
+        <Stack.Screen name="colour-picker" options={{ headerShown: false }} key="colour-picker" />
         <Stack.Screen name="tabs" options={{ headerShown: false }} />
         <Stack.Screen name="not-found" options={{ headerShown: false }} />
       </Stack>
