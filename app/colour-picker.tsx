@@ -15,42 +15,7 @@ import ColorPicker, {
 } from "reanimated-color-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ColourPickerButton from "@/components/ColourPickerButton";
-
-const ColoursContext = createContext(null);
-
-export const ColoursProvider = ({ children }) => {
-  const [colors, setColors] = useState({
-    highArousal: "",
-    lowArousal: "",
-    pleasant: "",
-    unpleasant: "",
-  });
-
-  const getColours = async () => {
-    const storedColors = await AsyncStorage.getItem("trackerColors");
-    if (storedColors !== null) {
-      setColors(JSON.parse(storedColors));
-    }
-  };
-
-  useEffect(() => {
-    getColours();
-  }, []);
-
-  return (
-    <ColoursContext.Provider value={{ colors, setColors }}>
-      {children}
-    </ColoursContext.Provider>
-  );
-};
-
-export const useColours = () => {
-  const context = useContext(ColoursContext);
-  if (!context) {
-    throw new Error("useColours must be used within a ColoursProvider");
-  }
-  return context;
-};
+import ModalButton from "@/components/ModalButton";
 
 export default function MoodTrackerColourPicker() {
   const [colors, setColors] = useState({
@@ -78,13 +43,17 @@ export default function MoodTrackerColourPicker() {
   const [activeKey, setActiveKey] =
     useState<keyof typeof colors>("highArousal");
 
-  const saveColors = async () => {
+  const saveColor = async () => {
     await AsyncStorage.setItem("themeColors", JSON.stringify(colors));
+  };
+
+  const cancelColour = () => {
+    // TODO: clear button colour
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Customize Your Mood Theme</Text>
+      <Text style={styles.title}>Customize Your Mood Colours</Text>
 
       {Object.entries(colors).map(([key, value]) => (
         <View key={key} style={styles.option}>
@@ -99,40 +68,61 @@ export default function MoodTrackerColourPicker() {
         </View>
       ))}
 
-      {showModal && (
-        <Modal
-          style={styles.modalBackground}
-          animationType="slide"
-          accessible={true}
-          transparent={true}
-        >
-          <ColorPicker
-            style={{ width: "70%" }}
-            value={colors[activeKey]}
-            onComplete={onSelectColor}
-          >
-            <Panel1 />
-            <HueSlider />
-            <Swatches />
-          </ColorPicker>
+      <Modal
+        transparent={true}
+        visible={showModal}
+        animationType="slide"
+        onRequestClose={() => {
+          setShowModal(false);
+        }}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Pick a colour</Text>
+            <ColorPicker value={colors[activeKey]} onComplete={onSelectColor}>
+              <View style={styles.modalComponent}>
+                <Panel1 />
+              </View>
+              <View style={styles.modalComponent}>
+                <HueSlider />
+              </View>
+              <View style={styles.modalComponent}>
+                <Swatches />
+              </View>
+            </ColorPicker>
 
-          <Button
-            title="Select"
-            color={colors[activeKey]}
-            onPress={() => {
-              saveColors();
-              setShowModal(false);
-            }}
-          />
-        </Modal>
-      )}
+            <View style={styles.modalButtons}>
+              <ModalButton
+                type="cancel"
+                colour="#ABA8A7"
+                onPress={() => {
+                  cancelColour();
+                  setShowModal(false);
+                }}
+              />
+              <ModalButton
+                type="select"
+                colour={colors[activeKey]}
+                onPress={() => {
+                  saveColor();
+                  setShowModal(false);
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const maxWidth = screenWidth * 0.8;
+const borderWidth = Math.min(maxWidth * 0.015, 7);
+const borderRadius = Math.min(maxWidth * 0.05, 20);
 
-const fontSize = Math.min(screenWidth * 0.06, 70);
+const titleFontSize = Math.min(screenWidth * 0.06, 70);
+const modatlTitleFontSize = Math.min(screenWidth * 0.06, 50);
 
 const styles = StyleSheet.create({
   container: {
@@ -144,7 +134,7 @@ const styles = StyleSheet.create({
   title: {
     marginVertical: 20,
     fontFamily: "Jua",
-    fontSize: fontSize,
+    fontSize: titleFontSize,
     fontWeight: "bold",
     marginBottom: 5,
     color: "#000",
@@ -155,14 +145,38 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignSelf: "center",
   },
-  buttonContainer: {
-    marginTop: 30,
-    width: "100%",
-  },
   modalBackground: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: borderRadius,
+    borderWidth: borderWidth,
+    borderColor: "#000",
+  },
+  modalContent: {
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow
+  },
+  modalTitle: {
+    fontFamily: "Jua",
+    fontSize: modatlTitleFontSize,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalComponent: {
+    padding: 15,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
   },
 });
