@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  Button,
   Modal,
   StyleSheet,
   ScrollView,
@@ -13,42 +12,57 @@ import ColorPicker, {
   Swatches,
   HueSlider,
 } from "reanimated-color-picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as colourUtils from "@/assets/utils/colour-utils";
 import ColourPickerButton from "@/components/ColourPickerButton";
 import ModalButton from "@/components/ModalButton";
+import StartButton from "@/components/StartButton";
 
 export default function MoodTrackerColourPicker() {
-  const [colours, setColours] = useState({
+  const readableTitles: Record<keyof colourUtils.Colours, string> = {
+    pleasant: "Pleasant",
+    unpleasant: "Unpleasant",
+    highArousal: "High Energy",
+    lowArousal: "Low Energy",
+  };
+
+  const [colours, setColours] = useState<colourUtils.Colours>({
     highArousal: "#FFFFFF",
     lowArousal: "#FFFFFF",
     pleasant: "#FFFFFF",
     unpleasant: "#FFFFFF",
   });
+  const [prevColour, setPrevColour] = useState<string>("#FFFFFF");
 
   const [showModal, setShowModal] = useState(false);
+  const [activeKey, setActiveKey] = useState<keyof typeof colours>("highArousal");
+  const [selectedColour, setSelectedColour] = useState<string>(colours[activeKey]);
 
-  const handleColourChange = (colour: string) => {
-    setColours((prev) => ({
-      ...prev,
-      [activeKey]: colour,
-    }));
-  };
-
-  const onSelectColour = ({ hex }: { hex: string }) => {
-    "worklet";
-    handleColourChange(hex);
-    console.log(hex);
-  };
-
-  const [activeKey, setActiveKey] =
-    useState<keyof typeof colours>("highArousal");
-
-  const saveColour = async () => {
-    await AsyncStorage.setItem("themeColours", JSON.stringify(colours));
+  const saveColour = async (selectedColour: string) => {
+    const updatedColours = {
+      ...colours,
+      [activeKey]: selectedColour,
+    };
+    setColours(updatedColours);
+    console.log("Updated colours:", updatedColours);
+    setShowModal(false);
   };
 
   const cancelColour = () => {
-    // TODO: clear button colour
+    const updatedColours = {
+      ...colours,
+      [activeKey]: prevColour,
+    };
+    setColours(updatedColours);
+    setShowModal(false);
+  };
+
+  const useDefaultColours = () => {
+    setColours({
+      highArousal: "#E05300",
+      lowArousal: "#9FBBCD",
+      pleasant: "#E1DE47",
+      unpleasant: "#8F53DD",
+    });
   };
 
   return (
@@ -61,6 +75,7 @@ export default function MoodTrackerColourPicker() {
             title={`${key}`}
             onPress={() => {
               setActiveKey(key as keyof typeof colours);
+              setPrevColour(colours[key as keyof typeof colours]);
               setShowModal(true);
             }}
             colour={value}
@@ -78,8 +93,13 @@ export default function MoodTrackerColourPicker() {
       >
         <View style={styles.modalBackground}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Pick a colour</Text>
-            <ColorPicker value={colours[activeKey]} onComplete={onSelectColour}>
+            <Text style={styles.modalTitle}>
+              Pick a colour to represent {readableTitles[activeKey]}
+            </Text>
+            <ColorPicker
+              value={colours[activeKey]}
+              onChange={(colour) => setSelectedColour(colour.hex)}
+            >
               <View style={styles.modalComponent}>
                 <Panel1 />
               </View>
@@ -97,21 +117,25 @@ export default function MoodTrackerColourPicker() {
                 colour="#ABA8A7"
                 onPress={() => {
                   cancelColour();
-                  setShowModal(false);
                 }}
               />
               <ModalButton
                 type="select"
-                colour={colours[activeKey]}
+                colour={selectedColour}
                 onPress={() => {
-                  saveColour();
-                  setShowModal(false);
+                  saveColour(selectedColour);
                 }}
               />
             </View>
           </View>
         </View>
       </Modal>
+
+      <StartButton
+        text="Save selection"
+        onPress={() => colourUtils.saveColoursToStorage(colours)}
+      />
+      <StartButton text="Use default" onPress={useDefaultColours} />
     </ScrollView>
   );
 }

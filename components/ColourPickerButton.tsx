@@ -36,6 +36,9 @@ export default function ColourPickerButton({ onPress, title, colour }: Props) {
     case "lowArousal":
       title = "Low Energy";
       break;
+    default:
+      title = title;
+      break;
   }
 
   return (

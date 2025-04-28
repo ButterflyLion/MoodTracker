@@ -2,9 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type RGB = { r: number; g: number; b: number };
 
+export interface Colours {
+  highArousal: string;
+  lowArousal: string;
+  pleasant: string;
+  unpleasant: string;
+}
+
 export async function getColours() {
   try {
-    const storedColors = await AsyncStorage.getItem("trackerColors");
+    const storedColors = await AsyncStorage.getItem("moodTrackerColours");
     if (storedColors) {
       return JSON.parse(storedColors);
     }
@@ -16,6 +23,15 @@ export async function getColours() {
     console.error("Error retrieving tracker colors:", error);
   }
 }
+
+export async function saveColoursToStorage(colours: Colours): Promise<void> {
+  try {
+    await AsyncStorage.setItem("moodTrackerColours", JSON.stringify(colours));
+    console.log("Colours saved to storage:", colours);
+  } catch (error) {
+    console.error("Error saving colours to storage:", error);
+  }
+};
 
 export function hexToRgb(hex: string): RGB {
   const sanitized = hex.replace("#", "");
