@@ -23,6 +23,7 @@ import Animated, {
 } from "react-native-reanimated";
 import MoodLoggerGraph from "@/components/MoodLoggerGraph";
 import { useSearchParams } from "expo-router/build/hooks";
+import * as colourUtils from "@/assets/utils/colour-utils";
 
 const { width, height } = Dimensions.get("window");
 const GRAPH_SCALE = 0.8;
@@ -31,14 +32,8 @@ const GRAPH_CONTAINER_HEIGHT = height * GRAPH_SCALE;
 const GRAPH_SIZE = Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT) - 40;
 
 const PLEASANT = "#E1DE47";
-const MEDIUM_PLEASANTNESS = "#D5D365";
-const NEUTRAL_PLEASANTNESS = "#BCA5A1";
-const MEDIUM_UNPLEASANTNESS = "#A377DD";
 const UNPLEASANT = "#8F53DD";
 const HIGH_AROUSAL = "#E05300";
-const MEDIUM_HIGH_AROUSAL = "#DC6B2A";
-const NEUTRAL_AROUSAL = "#A88E80";
-const MEDIUM_LOW_AROUSAL = "#74B0D5";
 const LOW_AROUSAL = "#9FBBCD";
 
 export default function MoodTrackerScreen() {
@@ -55,6 +50,29 @@ export default function MoodTrackerScreen() {
 
   const [pleasantnessState, setPleasantnessState] = useState(0.5);
   const [arousalState, setArousalState] = useState(0.5);
+
+  const searchParams = useSearchParams();
+  const moodTrackerColours = searchParams.get("moodTrackerColours")
+    ? JSON.parse(searchParams.get("moodTrackerColours")!)
+    : null;
+
+  const {
+    pleasant,
+    mediumPleasantness,
+    neutralPleasantness,
+    mediumUnpleasantness,
+    unpleasant,
+    highArousal,
+    mediumHighArousal,
+    neutralArousal,
+    mediumLowArousal,
+    lowArousal,
+  } = colourUtils.generateMoodColors({
+    pleasant: moodTrackerColours?.pleasant || PLEASANT, // Default PLEASANT
+    unpleasant: moodTrackerColours?.unpleasant || UNPLEASANT, // Default UNPLEASANT
+    highArousal: moodTrackerColours?.highArousal || HIGH_AROUSAL, // Default HIGH_AROUSAL
+    lowArousal: moodTrackerColours?.lowArousal || LOW_AROUSAL, // Default LOW_AROUSAL
+  });
 
   useAnimatedReaction(
     () => pleasantness.value,
@@ -115,11 +133,11 @@ export default function MoodTrackerScreen() {
       pleasantness.value,
       [0, 0.25, 0.5, 0.75, 1],
       [
-        UNPLEASANT,
-        MEDIUM_UNPLEASANTNESS,
-        NEUTRAL_PLEASANTNESS,
-        MEDIUM_PLEASANTNESS,
-        PLEASANT,
+        unpleasant,
+        mediumUnpleasantness,
+        neutralPleasantness,
+        mediumPleasantness,
+        pleasant,
       ]
     );
 
@@ -127,11 +145,11 @@ export default function MoodTrackerScreen() {
       arousal.value,
       [0, 0.25, 0.5, 0.75, 1],
       [
-        HIGH_AROUSAL,
-        MEDIUM_HIGH_AROUSAL,
-        NEUTRAL_AROUSAL,
-        MEDIUM_LOW_AROUSAL,
-        LOW_AROUSAL,
+        highArousal,
+        mediumHighArousal,
+        neutralArousal,
+        mediumLowArousal,
+        lowArousal,
       ]
     );
 
@@ -160,28 +178,13 @@ export default function MoodTrackerScreen() {
     offsetY.value = newY;
   };
 
-  const searchParams = useSearchParams();
-  const moodTrackerColours = searchParams.get("moodTrackerColours")
-    ? JSON.parse(searchParams.get("moodTrackerColours")!)
-    : null;
-  const pleasant = moodTrackerColours ? moodTrackerColours.pleasant : PLEASANT;
-  const unpleasant = moodTrackerColours
-    ? moodTrackerColours.unpleasant
-    : UNPLEASANT;
-  const highArousal = moodTrackerColours
-    ? moodTrackerColours.highArousal
-    : HIGH_AROUSAL;
-  const lowArousal = moodTrackerColours
-    ? moodTrackerColours.lowArousal
-    : LOW_AROUSAL;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-    useEffect(() => {
-      setIsClient(true);
-    }, []);
-  
-    if (Platform.OS === "web" && !isClient) {
-      return null; // Prevents server-side rendering issues on web
-    }
+  if (Platform.OS === "web" && !isClient) {
+    return null; // Prevents server-side rendering issues on web
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -190,14 +193,14 @@ export default function MoodTrackerScreen() {
         <Animated.View style={styles.graphContainer}>
           <MoodLoggerGraph
             pleasant={pleasant}
-            medium_pleasantness={MEDIUM_PLEASANTNESS}
-            neutral_pleasantness={NEUTRAL_PLEASANTNESS}
-            medium_unpleasantness={MEDIUM_UNPLEASANTNESS}
+            medium_pleasantness={mediumPleasantness}
+            neutral_pleasantness={neutralPleasantness}
+            medium_unpleasantness={mediumUnpleasantness}
             unpleasant={unpleasant}
             high_arousal={highArousal}
-            medium_high_arousal={MEDIUM_HIGH_AROUSAL}
-            neutral_arousal={NEUTRAL_AROUSAL}
-            medium_low_arousal={MEDIUM_LOW_AROUSAL}
+            medium_high_arousal={mediumHighArousal}
+            neutral_arousal={neutralArousal}
+            medium_low_arousal={mediumLowArousal}
             low_arousal={lowArousal}
             graphSize={GRAPH_SIZE}
           />
@@ -218,8 +221,8 @@ export default function MoodTrackerScreen() {
             minimumValue={0}
             maximumValue={1}
             value={pleasantnessState}
-            minimumTrackTintColor={UNPLEASANT}
-            maximumTrackTintColor={PLEASANT}
+            minimumTrackTintColor={unpleasant}
+            maximumTrackTintColor={pleasant}
             onValueChange={(value) => {
               translateX.value = value * GRAPH_SIZE;
               updateGraphFromSliders(value, arousal.value);
@@ -232,8 +235,8 @@ export default function MoodTrackerScreen() {
             minimumValue={0}
             maximumValue={1}
             value={1 - arousalState}
-            minimumTrackTintColor={LOW_AROUSAL}
-            maximumTrackTintColor={HIGH_AROUSAL}
+            minimumTrackTintColor={lowArousal}
+            maximumTrackTintColor={highArousal}
             onValueChange={(value) => {
               const invertedValue = 1 - value;
               translateY.value = invertedValue * GRAPH_SIZE;
