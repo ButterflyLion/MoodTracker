@@ -1,3 +1,4 @@
+import { Dimensions } from "react-native";
 import Svg, {
   Line,
   Text as SvgText,
@@ -20,6 +21,9 @@ interface ColourPickerModalProps {
   unpleasant: string;
   graphSize: number;
 }
+
+const { width: width, height: height } = Dimensions.get("window");
+const fontSize = Math.min(width * 0.025, 70);
 
 export default function MoodLoggerGraph({
   high_arousal,
@@ -213,7 +217,7 @@ export default function MoodLoggerGraph({
         x2={graphSize}
         y2={graphSize / 2}
         stroke="black"
-        strokeWidth="2"
+        strokeWidth="4"
       />
       {/* Y-Axis (Arousal) */}
       <Line
@@ -222,20 +226,40 @@ export default function MoodLoggerGraph({
         x2={graphSize / 2}
         y2={graphSize}
         stroke="black"
-        strokeWidth="2"
+        strokeWidth="4"
       />
 
       {/* Labels */}
-      <SvgText x={graphSize - 70} y={graphSize / 2 - 10} fontSize="16">
+      <SvgText
+        x={graphSize - 120}
+        y={graphSize / 2 - 10}
+        fontFamily="Jua"
+        fontSize={fontSize}
+      >
         Positive
       </SvgText>
-      <SvgText x={10} y={graphSize / 2 - 10} fontSize="16">
+      <SvgText
+        x={10}
+        y={graphSize / 2 - 10}
+        fontFamily="Jua"
+        fontSize={fontSize}
+      >
         Negative
       </SvgText>
-      <SvgText x={graphSize / 2 + 10} y={20} fontSize="16">
+      <SvgText
+        x={graphSize / 2 + 10}
+        y={30}
+        fontFamily="Jua"
+        fontSize={fontSize}
+      >
         High Arousal
       </SvgText>
-      <SvgText x={graphSize / 2 + 10} y={graphSize - 10} fontSize="16">
+      <SvgText
+        x={graphSize / 2 + 10}
+        y={graphSize - 10}
+        fontFamily="Jua"
+        fontSize={fontSize}
+      >
         Low Arousal
       </SvgText>
     </Svg>

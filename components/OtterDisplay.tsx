@@ -35,12 +35,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "15%",
     width: "100%",
-    right: "15%",
+    right: "14%",
   },
   puddleDisplay: {
     position: "absolute",
     top: "15%",
-    right: "10%",
+    right: "12%",
     width: "100%",
   }
 });

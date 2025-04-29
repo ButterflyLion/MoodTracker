@@ -25,7 +25,9 @@ import MoodLoggerGraph from "@/components/MoodLoggerGraph";
 import { useSearchParams } from "expo-router/build/hooks";
 import * as colourUtils from "@/assets/utils/colour-utils";
 
-const { width, height } = Dimensions.get("window");
+const { width: width, height: height } = Dimensions.get("window");
+const fontSize = Math.min(width * 0.03, 70);
+
 const GRAPH_SCALE = 0.8;
 const GRAPH_CONTAINER_WIDTH = width * GRAPH_SCALE;
 const GRAPH_CONTAINER_HEIGHT = height * GRAPH_SCALE;
@@ -223,10 +225,12 @@ export default function MoodTrackerScreen() {
             value={pleasantnessState}
             minimumTrackTintColor={unpleasant}
             maximumTrackTintColor={pleasant}
+            thumbTintColor="#000"
             onValueChange={(value) => {
               translateX.value = value * GRAPH_SIZE;
               updateGraphFromSliders(value, arousal.value);
             }}
+            tapToSeek={true}
           />
 
           <Text style={styles.sliderLabel}>Arousal</Text>
@@ -237,11 +241,13 @@ export default function MoodTrackerScreen() {
             value={1 - arousalState}
             minimumTrackTintColor={lowArousal}
             maximumTrackTintColor={highArousal}
+            thumbTintColor="#000"
             onValueChange={(value) => {
               const invertedValue = 1 - value;
               translateY.value = invertedValue * GRAPH_SIZE;
               updateGraphFromSliders(pleasantness.value, invertedValue);
             }}
+            tapToSeek={true}
           />
         </View>
       </GestureHandlerRootView>
@@ -267,11 +273,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   draggablePoint: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: GRAPH_SIZE / 20,
+    height: GRAPH_SIZE / 20,
+    borderRadius: GRAPH_SIZE / 40,
     borderColor: "#000",
-    borderWidth: 3,
+    borderWidth: 5,
     position: "absolute",
   },
   slidersContainer: {
@@ -283,7 +289,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sliderLabel: {
-    fontSize: 16,
+    fontFamily: "Jua",
+    fontSize: fontSize,
     fontWeight: "bold",
     marginBottom: 10,
   },

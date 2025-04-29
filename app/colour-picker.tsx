@@ -79,13 +79,13 @@ export default function MoodTrackerColourPicker() {
         />
         <ModalButton
           type="other"
-          colour="#fff"
+          colour="#C7F0FF"
           text="Use default"
           onPress={useDefaultColours}
         />
         <ModalButton
           type="other"
-          colour="##88d481"
+          colour="#74E59C"
           text="Save selection"
           onPress={() => {
             colourUtils.saveColoursToStorage(colours).then(() => {
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
     alignItems: "center",
+    backgroundColor: "#74D4E5",
   },
   title: {
     marginVertical: 20,
