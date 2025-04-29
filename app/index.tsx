@@ -10,9 +10,14 @@ export default function HomeScreen() {
 
   const handleLogMoodPress = () => {
     getColours().then((trackerColours) => {
+      console.log("Tracker colours:", trackerColours);
       if (trackerColours !== null) {
-        router.push("/tabs/log-mood");
-        console.log(trackerColours);
+        router.push({
+          pathname: "/tabs/log-mood",
+          params: {
+            moodTrackerColours: JSON.stringify(trackerColours),
+          },
+        });
       } else {
         router.push("/colour-picker");
       }
