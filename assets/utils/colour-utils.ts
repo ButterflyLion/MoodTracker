@@ -13,7 +13,7 @@ export async function getColours() {
   try {
     const storedColors = await AsyncStorage.getItem("moodTrackerColours");
     if (storedColors) {
-      return JSON.parse(storedColors);
+      return storedColors;
     }
     else {
       console.log("No stored colors found.");
@@ -31,7 +31,16 @@ export async function saveColoursToStorage(colours: Colours): Promise<void> {
   } catch (error) {
     console.error("Error saving colours to storage:", error);
   }
-};
+}
+
+export async function removeColoursFromStorage(): Promise<void> {
+  try {
+    await AsyncStorage.removeItem("moodTrackerColours");
+    console.log("Colours removed from storage");
+  } catch (error) {
+    console.error("Error removing colours from storage:", error);
+  }
+}
 
 export function hexToRgb(hex: string): RGB {
   const sanitized = hex.replace("#", "");

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -15,9 +16,10 @@ import ColorPicker, {
 import * as colourUtils from "@/assets/utils/colour-utils";
 import ColourPickerButton from "@/components/ColourPickerButton";
 import ModalButton from "@/components/ModalButton";
-import StartButton from "@/components/StartButton";
 
 export default function MoodTrackerColourPicker() {
+  const router = useRouter();
+
   const readableTitles: Record<keyof colourUtils.Colours, string> = {
     pleasant: "Pleasant",
     unpleasant: "Unpleasant",
@@ -62,6 +64,15 @@ export default function MoodTrackerColourPicker() {
       lowArousal: "#9FBBCD",
       pleasant: "#E1DE47",
       unpleasant: "#8F53DD",
+    });
+  };
+
+  const clearColours = () => {
+    setColours({
+      highArousal: "#FFFFFF",
+      lowArousal: "#FFFFFF",
+      pleasant: "#FFFFFF",
+      unpleasant: "#FFFFFF",
     });
   };
 
@@ -131,11 +142,35 @@ export default function MoodTrackerColourPicker() {
         </View>
       </Modal>
 
-      <StartButton
-        text="Save selection"
-        onPress={() => colourUtils.saveColoursToStorage(colours)}
-      />
-      <StartButton text="Use default" onPress={useDefaultColours} />
+      <View style={styles.modalButtons}>
+        <ModalButton
+          type="other"
+          colour="#ABA8A7"
+          text="Clear selection"
+          onPress={clearColours}
+        />
+        <ModalButton
+          type="other"
+          colour="#fff"
+          text="Use default"
+          onPress={useDefaultColours}
+        />
+        <ModalButton
+          type="other"
+          colour="##88d481"
+          text="Save selection"
+          onPress={() => {
+            colourUtils.saveColoursToStorage(colours).then(() => {
+              router.push({
+                pathname: "/tabs/log-mood",
+                params: {
+                  moodTrackerColours: JSON.stringify(colours),
+                },
+              });
+            });
+          }}
+        />
+      </View>
     </ScrollView>
   );
 }

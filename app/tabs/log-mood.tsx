@@ -8,14 +8,6 @@ import {
   ScrollView,
 } from "react-native";
 import Slider from "@react-native-community/slider";
-import Svg, {
-  Line,
-  Text as SvgText,
-  Defs,
-  LinearGradient,
-  Stop,
-  Rect,
-} from "react-native-svg";
 import {
   Gesture,
   GestureDetector,
@@ -29,6 +21,8 @@ import Animated, {
   useAnimatedReaction,
   runOnJS,
 } from "react-native-reanimated";
+import MoodLoggerGraph from "@/components/MoodLoggerGraph";
+import { useSearchParams } from "expo-router/build/hooks";
 
 const { width, height } = Dimensions.get("window");
 const GRAPH_SCALE = 0.8;
@@ -166,223 +160,47 @@ export default function MoodTrackerScreen() {
     offsetY.value = newY;
   };
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const searchParams = useSearchParams();
+  const moodTrackerColours = searchParams.get("moodTrackerColours")
+    ? JSON.parse(searchParams.get("moodTrackerColours")!)
+    : null;
+  const pleasant = moodTrackerColours ? moodTrackerColours.pleasant : PLEASANT;
+  const unpleasant = moodTrackerColours
+    ? moodTrackerColours.unpleasant
+    : UNPLEASANT;
+  const highArousal = moodTrackerColours
+    ? moodTrackerColours.highArousal
+    : HIGH_AROUSAL;
+  const lowArousal = moodTrackerColours
+    ? moodTrackerColours.lowArousal
+    : LOW_AROUSAL;
 
-  if (Platform.OS === "web" && !isClient) {
-    return null; // Prevents server-side rendering issues on web
-  }
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
+  
+    if (Platform.OS === "web" && !isClient) {
+      return null; // Prevents server-side rendering issues on web
+    }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <GestureHandlerRootView style={styles.container}>
         {/* Graph */}
         <Animated.View style={styles.graphContainer}>
-          <Svg width={GRAPH_SIZE} height={GRAPH_SIZE}>
-            {/* Quadrant-Based Gradients */}
-            <Defs>
-              {/* Top-Right Quadrant */}
-              <LinearGradient
-                id="topRightHorizontal"
-                x1="0%"
-                y1="50%"
-                x2="100%"
-                y2="50%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-                <Stop offset="50%" stopColor={MEDIUM_PLEASANTNESS} />
-                <Stop offset="100%" stopColor={PLEASANT} />
-              </LinearGradient>
-              <LinearGradient
-                id="topRightVertical"
-                x1="50%"
-                y1="100%"
-                x2="50%"
-                y2="0%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-                <Stop offset="50%" stopColor={MEDIUM_HIGH_AROUSAL} />
-                <Stop offset="100%" stopColor={HIGH_AROUSAL} />
-              </LinearGradient>
-
-              {/* Top-Left Quadrant */}
-              <LinearGradient
-                id="topLeftHorizontal"
-                x1="100%"
-                y1="50%"
-                x2="0%"
-                y2="50%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-                <Stop offset="50%" stopColor={MEDIUM_UNPLEASANTNESS} />
-                <Stop offset="100%" stopColor={UNPLEASANT} />
-              </LinearGradient>
-              <LinearGradient
-                id="topLeftVertical"
-                x1="50%"
-                y1="100%"
-                x2="50%"
-                y2="0%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-                <Stop offset="50%" stopColor={MEDIUM_HIGH_AROUSAL} />
-                <Stop offset="100%" stopColor={HIGH_AROUSAL} />
-              </LinearGradient>
-
-              {/* Bottom-Left Quadrant */}
-              <LinearGradient
-                id="bottomLeftHorizontal"
-                x1="100%"
-                y1="50%"
-                x2="0%"
-                y2="50%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-                <Stop offset="50%" stopColor={MEDIUM_UNPLEASANTNESS} />
-                <Stop offset="100%" stopColor={UNPLEASANT} />
-              </LinearGradient>
-              <LinearGradient
-                id="bottomLeftVertical"
-                x1="50%"
-                y1="0%"
-                x2="50%"
-                y2="100%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-                <Stop offset="50%" stopColor={MEDIUM_LOW_AROUSAL} />
-                <Stop offset="100%" stopColor={LOW_AROUSAL} />
-              </LinearGradient>
-
-              {/* Bottom-Right Quadrant */}
-              <LinearGradient
-                id="bottomRightHorizontal"
-                x1="0%"
-                y1="50%"
-                x2="100%"
-                y2="50%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_PLEASANTNESS} />
-                <Stop offset="50%" stopColor={MEDIUM_PLEASANTNESS} />
-                <Stop offset="100%" stopColor={PLEASANT} />
-              </LinearGradient>
-              <LinearGradient
-                id="bottomRightVertical"
-                x1="50%"
-                y1="0%"
-                x2="50%"
-                y2="100%"
-              >
-                <Stop offset="0%" stopColor={NEUTRAL_AROUSAL} />
-                <Stop offset="50%" stopColor={MEDIUM_LOW_AROUSAL} />
-                <Stop offset="100%" stopColor={LOW_AROUSAL} />
-              </LinearGradient>
-            </Defs>
-
-            {/* Top-Right Quadrant */}
-            <Rect
-              x={GRAPH_SIZE / 2}
-              y="0"
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#topRightHorizontal)"
-              fillOpacity="1"
-            />
-            <Rect
-              x={GRAPH_SIZE / 2}
-              y="0"
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#topRightVertical)"
-              fillOpacity="0.5"
-            />
-
-            {/* Top-Left Quadrant */}
-            <Rect
-              x="0"
-              y="0"
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#topLeftHorizontal)"
-              fillOpacity="1"
-            />
-            <Rect
-              x="0"
-              y="0"
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#topLeftVertical)"
-              fillOpacity="0.5"
-            />
-
-            {/* Bottom-Left Quadrant */}
-            <Rect
-              x="0"
-              y={GRAPH_SIZE / 2}
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#bottomLeftHorizontal)"
-              fillOpacity="1"
-            />
-            <Rect
-              x="0"
-              y={GRAPH_SIZE / 2}
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#bottomLeftVertical)"
-              fillOpacity="0.5"
-            />
-            {/* Bottom-Right Quadrant */}
-            <Rect
-              x={GRAPH_SIZE / 2}
-              y={GRAPH_SIZE / 2}
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#bottomRightHorizontal)"
-              fillOpacity="1"
-            />
-            <Rect
-              x={GRAPH_SIZE / 2}
-              y={GRAPH_SIZE / 2}
-              width={GRAPH_SIZE / 2}
-              height={GRAPH_SIZE / 2}
-              fill="url(#bottomRightVertical)"
-              fillOpacity="0.5"
-            />
-
-            {/* X-Axis (Valence) */}
-            <Line
-              x1="0"
-              y1={GRAPH_SIZE / 2}
-              x2={GRAPH_SIZE}
-              y2={GRAPH_SIZE / 2}
-              stroke="black"
-              strokeWidth="2"
-            />
-            {/* Y-Axis (Arousal) */}
-            <Line
-              x1={GRAPH_SIZE / 2}
-              y1="0"
-              x2={GRAPH_SIZE / 2}
-              y2={GRAPH_SIZE}
-              stroke="black"
-              strokeWidth="2"
-            />
-
-            {/* Labels */}
-            <SvgText x={GRAPH_SIZE - 70} y={GRAPH_SIZE / 2 - 10} fontSize="16">
-              Positive
-            </SvgText>
-            <SvgText x={10} y={GRAPH_SIZE / 2 - 10} fontSize="16">
-              Negative
-            </SvgText>
-            <SvgText x={GRAPH_SIZE / 2 + 10} y={20} fontSize="16">
-              High Arousal
-            </SvgText>
-            <SvgText x={GRAPH_SIZE / 2 + 10} y={GRAPH_SIZE - 10} fontSize="16">
-              Low Arousal
-            </SvgText>
-          </Svg>
+          <MoodLoggerGraph
+            pleasant={pleasant}
+            medium_pleasantness={MEDIUM_PLEASANTNESS}
+            neutral_pleasantness={NEUTRAL_PLEASANTNESS}
+            medium_unpleasantness={MEDIUM_UNPLEASANTNESS}
+            unpleasant={unpleasant}
+            high_arousal={highArousal}
+            medium_high_arousal={MEDIUM_HIGH_AROUSAL}
+            neutral_arousal={NEUTRAL_AROUSAL}
+            medium_low_arousal={MEDIUM_LOW_AROUSAL}
+            low_arousal={lowArousal}
+            graphSize={GRAPH_SIZE}
+          />
 
           {/* Draggable Point */}
           <GestureDetector gesture={dragGesture}>

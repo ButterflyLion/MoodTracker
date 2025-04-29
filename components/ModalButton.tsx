@@ -16,12 +16,13 @@ const borderWidth = Math.min(maxWidth * 0.015, 7);
 const borderRadius = Math.min(maxWidth * 0.05, 20);
 
 interface Props {
-  type: "select" | "cancel";
+  type: "select" | "cancel" | string;
+  text?: string;
   onPress?: (event: GestureResponderEvent) => void;
   colour: string;
 }
 
-export default function StartButton({ type, onPress, colour }: Props) {
+export default function StartButton({ type, onPress, text, colour }: Props) {
   switch (type) {
     case "select":
       return (
@@ -43,12 +44,22 @@ export default function StartButton({ type, onPress, colour }: Props) {
           <Text style={styles.text}>Cancel</Text>
         </TouchableOpacity>
       );
+    default:
+      return (
+        <TouchableOpacity
+          style={[styles.selectContainer, { backgroundColor: colour }]}
+          onPress={onPress}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.text}>{text}</Text>
+        </TouchableOpacity>
+      );
   }
 }
 
 const styles = StyleSheet.create({
   selectContainer: {
-    display: "flex",
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: borderRadius,
