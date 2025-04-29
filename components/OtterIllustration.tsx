@@ -1,24 +1,17 @@
 import * as React from "react";
-import { Dimensions, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Svg, { Path, Ellipse } from "react-native-svg";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-
-export default function OtterIllustration() {
-  const aspectRatio = 290 / 399;
-
-  const maxWidth = screenWidth * 0.8;
-  const maxHeight = screenHeight * 0.7;
-  const width = Math.min(maxWidth, maxHeight * aspectRatio);
-  const height = width / aspectRatio;
+export default function OtterIllustration({ otterWidth, otterHeight }: { otterWidth: number; otterHeight: number }) {
 
   return (
     <View style={styles.otterContainer}>
       <Svg
-        style={styles.otterSVG}
-        width={width}
-        height={height}
+        style={{ ...styles.otterSVG, width: otterWidth, height: otterHeight }}
+        width={otterWidth}
+        height={otterHeight}
         viewBox="0 0 290 399"
+        preserveAspectRatio="xMidYMid meet"
         fill="none"
       >
         <Path

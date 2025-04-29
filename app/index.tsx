@@ -40,7 +40,6 @@ export default function HomeScreen() {
           }}
         />
       </View>
-
       <OtterDisplay />
     </View>
   );
@@ -55,6 +54,7 @@ const subtitleFontSize = Math.min(maxWidth * 0.075, 50);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#74D4E5",
   },
   greetings: {
     position: "absolute",
