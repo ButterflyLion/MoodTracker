@@ -7,7 +7,6 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import Slider from "@react-native-community/slider";
 import {
   Gesture,
   GestureDetector,
@@ -22,6 +21,7 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import MoodLoggerGraph from "@/components/MoodLoggerGraph";
+import Slider from "@/components/Slider";
 import { useSearchParams } from "expo-router/build/hooks";
 import * as colourUtils from "@/assets/utils/colour-utils";
 
@@ -231,35 +231,30 @@ export default function MoodTrackerScreen() {
         <View style={styles.slidersContainer}>
           <Text style={styles.sliderLabel}>Pleasantness</Text>
           <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={1}
+            sliderWidth={GRAPH_SIZE}
+            buttonHeight={GRAPH_SIZE / 20}
             value={pleasantnessState}
-            minimumTrackTintColor={unpleasant}
-            maximumTrackTintColor={pleasant}
-            thumbTintColor="#000"
             onValueChange={(value) => {
               translateX.value = value * GRAPH_SIZE;
               updateGraphFromSliders(value, arousal.value);
             }}
-            tapToSeek={true}
+            trackColours={[unpleasant, pleasant]}
+            // Happy by Xinh Studio from <a href="https://thenounproject.com/browse/icons/term/happy/" target="_blank" title="Happy Icons">Noun Project</a> (CC BY 3.0)
+            sliderImageUrl={require("@/assets/images/pleasantness.png")}
           />
-
           <Text style={styles.sliderLabel}>Arousal</Text>
           <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={1}
+            sliderWidth={GRAPH_SIZE}
+            buttonHeight={GRAPH_SIZE / 20}
             value={1 - arousalState}
-            minimumTrackTintColor={lowArousal}
-            maximumTrackTintColor={highArousal}
-            thumbTintColor="#000"
             onValueChange={(value) => {
               const invertedValue = 1 - value;
               translateY.value = invertedValue * GRAPH_SIZE;
               updateGraphFromSliders(pleasantness.value, invertedValue);
             }}
-            tapToSeek={true}
+            trackColours={[lowArousal, highArousal]}
+            // Energy by UNKNOWN from <a href="https://thenounproject.com/browse/icons/term/energy/" target="_blank" title="Energy Icons">Noun Project</a> (CC BY 3.0)
+            sliderImageUrl={require("@/assets/images/energy.png")}
           />
         </View>
       </GestureHandlerRootView>
