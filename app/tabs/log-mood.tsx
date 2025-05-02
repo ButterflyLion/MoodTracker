@@ -26,7 +26,7 @@ import { useSearchParams } from "expo-router/build/hooks";
 import * as colourUtils from "@/assets/utils/colour-utils";
 
 const { width: width, height: height } = Dimensions.get("window");
-const fontSize = Math.min(width * 0.03, 70);
+const fontSize = Math.min(width * 0.03, 50);
 
 const GRAPH_SCALE = 0.8;
 const GRAPH_CONTAINER_WIDTH = width * GRAPH_SCALE;
@@ -117,6 +117,17 @@ export default function MoodTrackerScreen() {
       offsetY.value = translateY.value;
     });
 
+  const tapGesture = Gesture.Tap().onEnd((event) => {
+    const tappedX = Math.max(0, Math.min(event.x, GRAPH_SIZE)); // Clamp within graph bounds
+    const tappedY = Math.max(0, Math.min(event.y, GRAPH_SIZE)); // Clamp within graph bounds
+
+    translateX.value = tappedX;
+    translateY.value = tappedY;
+
+    offsetX.value = tappedX;
+    offsetY.value = tappedY;
+  });
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -133,7 +144,7 @@ export default function MoodTrackerScreen() {
   const dotColour = useAnimatedStyle(() => {
     const pleasantnessColour = interpolateColor(
       pleasantness.value,
-      [0, 0.25, 0.5, 0.75, 1],
+      [0, 0.3, 0.5, 0.7, 1],
       [
         unpleasant,
         mediumUnpleasantness,
@@ -145,7 +156,7 @@ export default function MoodTrackerScreen() {
 
     const arousalColour = interpolateColor(
       arousal.value,
-      [0, 0.25, 0.5, 0.75, 1],
+      [0, 0.3, 0.5, 0.7, 1],
       [
         highArousal,
         mediumHighArousal,
@@ -192,28 +203,29 @@ export default function MoodTrackerScreen() {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <GestureHandlerRootView style={styles.container}>
         {/* Graph */}
-        <Animated.View style={styles.graphContainer}>
-          <MoodLoggerGraph
-            pleasant={pleasant}
-            medium_pleasantness={mediumPleasantness}
-            neutral_pleasantness={neutralPleasantness}
-            medium_unpleasantness={mediumUnpleasantness}
-            unpleasant={unpleasant}
-            high_arousal={highArousal}
-            medium_high_arousal={mediumHighArousal}
-            neutral_arousal={neutralArousal}
-            medium_low_arousal={mediumLowArousal}
-            low_arousal={lowArousal}
-            graphSize={GRAPH_SIZE}
-          />
+        <GestureDetector gesture={Gesture.Exclusive(dragGesture, tapGesture)}>
+          <Animated.View style={styles.graphContainer}>
+            <MoodLoggerGraph
+              pleasant={pleasant}
+              medium_pleasantness={mediumPleasantness}
+              neutral_pleasantness={neutralPleasantness}
+              medium_unpleasantness={mediumUnpleasantness}
+              unpleasant={unpleasant}
+              high_arousal={highArousal}
+              medium_high_arousal={mediumHighArousal}
+              neutral_arousal={neutralArousal}
+              medium_low_arousal={mediumLowArousal}
+              low_arousal={lowArousal}
+              graphSize={GRAPH_SIZE}
+            />
 
-          {/* Draggable Point */}
-          <GestureDetector gesture={dragGesture}>
+            {/* Draggable Point */}
+
             <Animated.View
               style={[styles.draggablePoint, animatedStyle, dotColour]}
             />
-          </GestureDetector>
-        </Animated.View>
+          </Animated.View>
+        </GestureDetector>
 
         {/* Sliders */}
         <View style={styles.slidersContainer}>

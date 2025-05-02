@@ -23,7 +23,7 @@ interface ColourPickerModalProps {
 }
 
 const { width: width, height: height } = Dimensions.get("window");
-const fontSize = Math.min(width * 0.025, 70);
+const fontSize = Math.min(width * 0.03, 50);
 
 export default function MoodLoggerGraph({
   high_arousal,
@@ -51,7 +51,7 @@ export default function MoodLoggerGraph({
           y2="50%"
         >
           <Stop offset="0%" stopColor={neutral_pleasantness} />
-          <Stop offset="50%" stopColor={medium_pleasantness} />
+          <Stop offset="30%" stopColor={medium_pleasantness} />
           <Stop offset="100%" stopColor={pleasant} />
         </LinearGradient>
         <LinearGradient
@@ -62,7 +62,7 @@ export default function MoodLoggerGraph({
           y2="0%"
         >
           <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="50%" stopColor={medium_high_arousal} />
+          <Stop offset="30%" stopColor={medium_high_arousal} />
           <Stop offset="100%" stopColor={high_arousal} />
         </LinearGradient>
 
@@ -75,7 +75,7 @@ export default function MoodLoggerGraph({
           y2="50%"
         >
           <Stop offset="0%" stopColor={neutral_pleasantness} />
-          <Stop offset="50%" stopColor={medium_unpleasantness} />
+          <Stop offset="30%" stopColor={medium_unpleasantness} />
           <Stop offset="100%" stopColor={unpleasant} />
         </LinearGradient>
         <LinearGradient
@@ -86,7 +86,7 @@ export default function MoodLoggerGraph({
           y2="0%"
         >
           <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="50%" stopColor={medium_high_arousal} />
+          <Stop offset="30%" stopColor={medium_high_arousal} />
           <Stop offset="100%" stopColor={high_arousal} />
         </LinearGradient>
 
@@ -99,7 +99,7 @@ export default function MoodLoggerGraph({
           y2="50%"
         >
           <Stop offset="0%" stopColor={neutral_pleasantness} />
-          <Stop offset="50%" stopColor={medium_unpleasantness} />
+          <Stop offset="30%" stopColor={medium_unpleasantness} />
           <Stop offset="100%" stopColor={unpleasant} />
         </LinearGradient>
         <LinearGradient
@@ -110,7 +110,7 @@ export default function MoodLoggerGraph({
           y2="100%"
         >
           <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="50%" stopColor={medium_low_arousal} />
+          <Stop offset="30%" stopColor={medium_low_arousal} />
           <Stop offset="100%" stopColor={low_arousal} />
         </LinearGradient>
 
@@ -123,7 +123,7 @@ export default function MoodLoggerGraph({
           y2="50%"
         >
           <Stop offset="0%" stopColor={neutral_pleasantness} />
-          <Stop offset="50%" stopColor={medium_pleasantness} />
+          <Stop offset="30%" stopColor={medium_pleasantness} />
           <Stop offset="100%" stopColor={pleasant} />
         </LinearGradient>
         <LinearGradient
@@ -134,7 +134,7 @@ export default function MoodLoggerGraph({
           y2="100%"
         >
           <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="50%" stopColor={medium_low_arousal} />
+          <Stop offset="30%" stopColor={medium_low_arousal} />
           <Stop offset="100%" stopColor={low_arousal} />
         </LinearGradient>
       </Defs>
@@ -231,7 +231,7 @@ export default function MoodLoggerGraph({
 
       {/* Labels */}
       <SvgText
-        x={graphSize - 120}
+        x={Math.min(graphSize - fontSize * 5, graphSize - 150)} // Clamp to prevent going off the right edge
         y={graphSize / 2 - 10}
         fontFamily="Jua"
         fontSize={fontSize}
@@ -239,7 +239,7 @@ export default function MoodLoggerGraph({
         Positive
       </SvgText>
       <SvgText
-        x={10}
+        x={Math.max(fontSize, 20)} // Ensure it doesn't go off the left edge
         y={graphSize / 2 - 10}
         fontFamily="Jua"
         fontSize={fontSize}
@@ -248,7 +248,7 @@ export default function MoodLoggerGraph({
       </SvgText>
       <SvgText
         x={graphSize / 2 + 10}
-        y={30}
+        y={Math.max(fontSize + 10, 30)} // Ensure it doesn't go off the top
         fontFamily="Jua"
         fontSize={fontSize}
       >
@@ -256,7 +256,7 @@ export default function MoodLoggerGraph({
       </SvgText>
       <SvgText
         x={graphSize / 2 + 10}
-        y={graphSize - 10}
+        y={graphSize - (fontSize / 2)} // Adjust based on font size to prevent overlap at the bottom
         fontFamily="Jua"
         fontSize={fontSize}
       >
