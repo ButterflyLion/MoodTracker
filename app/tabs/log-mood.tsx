@@ -117,7 +117,7 @@ export default function MoodTrackerScreen() {
       offsetY.value = translateY.value;
     });
 
-  const tapGesture = Gesture.Tap().onEnd((event) => {
+  const graphTapGesture = Gesture.Tap().onEnd((event) => {
     const tappedX = Math.max(0, Math.min(event.x, GRAPH_SIZE)); // Clamp within graph bounds
     const tappedY = Math.max(0, Math.min(event.y, GRAPH_SIZE)); // Clamp within graph bounds
 
@@ -203,7 +203,7 @@ export default function MoodTrackerScreen() {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <GestureHandlerRootView style={styles.container}>
         {/* Graph */}
-        <GestureDetector gesture={Gesture.Exclusive(dragGesture, tapGesture)}>
+        <GestureDetector gesture={Gesture.Exclusive(dragGesture, graphTapGesture)}>
           <Animated.View style={styles.graphContainer}>
             <MoodLoggerGraph
               pleasant={pleasant}
@@ -238,7 +238,7 @@ export default function MoodTrackerScreen() {
               translateX.value = value * GRAPH_SIZE;
               updateGraphFromSliders(value, arousal.value);
             }}
-            trackColours={[unpleasant, pleasant]}
+            trackColours={[unpleasant, neutralPleasantness, pleasant]}
             // Happy by Xinh Studio from <a href="https://thenounproject.com/browse/icons/term/happy/" target="_blank" title="Happy Icons">Noun Project</a> (CC BY 3.0)
             sliderImageUrl={require("@/assets/images/pleasantness.png")}
           />
@@ -252,7 +252,7 @@ export default function MoodTrackerScreen() {
               translateY.value = invertedValue * GRAPH_SIZE;
               updateGraphFromSliders(pleasantness.value, invertedValue);
             }}
-            trackColours={[lowArousal, highArousal]}
+            trackColours={[lowArousal, neutralArousal, highArousal]}
             // Energy by UNKNOWN from <a href="https://thenounproject.com/browse/icons/term/energy/" target="_blank" title="Energy Icons">Noun Project</a> (CC BY 3.0)
             sliderImageUrl={require("@/assets/images/energy.png")}
           />

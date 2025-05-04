@@ -3,11 +3,14 @@ import {
   View,
   Image,
   Text,
+  Dimensions,
   StyleSheet,
   PanResponder,
   GestureResponderEvent,
   PanResponderGestureState,
 } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { TapGesture } from "react-native-gesture-handler/lib/typescript/handlers/gestures/tapGesture";
 import { LinearGradient, Stop, Rect, Svg } from "react-native-svg";
 
 interface SliderProps {
@@ -16,7 +19,7 @@ interface SliderProps {
   value: number;
   onValueChange?: (value: number) => void;
   sliderImageUrl: string;
-  trackColours: [string, string];
+  trackColours: [string, string, string];
   thumbColour?: string;
 }
 
@@ -42,11 +45,8 @@ export default function Slider({
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: (_, gestureState) => {
-        // Store the initial thumb position when dragging starts
-        const cursorOffset =
-          gestureState.x0 - (thumbPosition + thumbContainerWidth / 2);
-        initialThumbPosition.current = thumbPosition - cursorOffset;
+      onPanResponderGrant: () => {
+        initialThumbPosition.current = thumbPosition;
       },
       onPanResponderMove: (
         _: GestureResponderEvent,
@@ -66,6 +66,15 @@ export default function Slider({
     })
   ).current;
 
+  const sliderTapGesture = Gesture.Tap().onEnd((event) => {
+    const tappedX = Math.max(0, Math.min(event.x, sliderWidth));
+    const newValue = tappedX / sliderWidth;
+    setThumbPosition(tappedX);
+    if (onValueChange) {
+      onValueChange(newValue); // Notify the parent component that the value has changed
+    }
+  });
+
   const thumbContainerRatio = 44 / 34;
   const thumbContainerWidth = buttonHeight * thumbContainerRatio;
   const thumbContainerHeight = buttonHeight;
@@ -80,57 +89,62 @@ export default function Slider({
   return (
     <>
       <Text style={styles.value}>Value: {Math.round(value * 100)}%</Text>{" "}
-      {/* TODO: Dynamically size the fonts in this component */}
-      <View style={styles.container}>
-        {/* Gradient Track */}
-        <Svg
-          width={sliderWidth}
-          height={sliderWidth * 0.03}
-          style={{ borderRadius: 15 }}
-        >
-          <LinearGradient id={gradientId} x1="0%" y1="50%" x2="100%" y2="50%">
-            <Stop offset="0%" stopColor={trackColours[0]} />
-            <Stop offset="100%" stopColor={trackColours[1]} />
-          </LinearGradient>
-          <Rect
+      <GestureDetector gesture={sliderTapGesture}>
+        <View style={styles.container}>
+          {/* Gradient Track */}
+          <Svg
             width={sliderWidth}
             height={sliderWidth * 0.03}
-            rx={15}
-            fill={`url(#${gradientId})`}
-          />
-        </Svg>
+            style={{ borderRadius: 15 }}
+          >
+            <LinearGradient id={gradientId} x1="0%" y1="50%" x2="100%" y2="50%">
+              <Stop offset="0%" stopColor={trackColours[0]} />
+              <Stop offset="50%" stopColor={trackColours[1]} />
+              <Stop offset="100%" stopColor={trackColours[2]} />
+            </LinearGradient>
+            <Rect
+              width={sliderWidth}
+              height={sliderWidth * 0.03}
+              rx={15}
+              fill={`url(#${gradientId})`}
+            />
+          </Svg>
 
-        {/* Thumb */}
-        <View
-          {...panResponder.panHandlers}
-          style={[
-            styles.thumbContainer,
-            {
-              left: thumbPosition - thumbContainerWidth / 2,
-              backgroundColor: thumbColour,
-              width: thumbContainerWidth,
-              height: thumbContainerHeight,
-            },
-          ]}
-        >
-          <Image
-            source={
-              typeof sliderImageUrl === "string"
-                ? { uri: sliderImageUrl }
-                : sliderImageUrl
-            }
-            style={{
-              ...styles.thumbImage,
-              width: thumbWidth * 0.9,
-              height: thumbHeight * 0.9,
-            }}
-            resizeMode="contain"
-          />
+          {/* Thumb */}
+          <View
+            {...panResponder.panHandlers}
+            style={[
+              styles.thumbContainer,
+              {
+                left: thumbPosition - thumbContainerWidth / 2,
+                backgroundColor: thumbColour,
+                width: thumbContainerWidth,
+                height: thumbContainerHeight,
+              },
+            ]}
+          >
+            <Image
+              source={
+                typeof sliderImageUrl === "string"
+                  ? { uri: sliderImageUrl }
+                  : sliderImageUrl
+              }
+              style={{
+                ...styles.thumbImage,
+                width: thumbWidth * 0.9,
+                height: thumbHeight * 0.9,
+              }}
+              resizeMode="contain"
+            />
+          </View>
         </View>
-      </View>
+      </GestureDetector>
     </>
   );
 }
+
+const { width: width, height: height } = Dimensions.get("window");
+const fontSize = Math.min(height * 0.02, 40);
 
 const styles = StyleSheet.create({
   container: {
@@ -138,6 +152,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    margin: 20,
   },
   thumbContainer: {
     position: "absolute",
@@ -149,13 +164,8 @@ const styles = StyleSheet.create({
   thumbImage: {
     position: "relative",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
   value: {
-    fontSize: 18,
-    marginBottom: 20,
+    fontFamily: "Jua",
+    fontSize: fontSize,
   },
 });
