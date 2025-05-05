@@ -5,7 +5,6 @@ import { captureRef } from "react-native-view-shot";
 import { type ImageSource } from "expo-image";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as MediaLibrary from "expo-media-library";
-import domtoimage from "dom-to-image";
 
 import Button from "@/components/Button";
 import ImageViewer from "@/components/ImageViewer";
@@ -65,29 +64,23 @@ export default function Index() {
       try {
         const localUri = await captureRef(imageRef, {
           quality: 1,
+          format: "jpg", // Specify the format
+          result: Platform.select({ web: "data-uri", default: "tmpfile" }), // Use data URI for web
         });
 
-        await MediaLibrary.saveToLibraryAsync(localUri);
-        if (localUri) {
+        if (Platform.select({ web: true, default: false })) {
+          // Create a download link for web
+          const link = document.createElement("a");
+          link.download = "sticker-smash.jpg";
+          link.href = localUri;
+          link.click();
+        } else {
+          // Save to media library for native platforms
+          await MediaLibrary.saveToLibraryAsync(localUri);
           alert("Saved!");
         }
       } catch (error) {
         console.log(error);
-      }
-    } else {
-      try {
-        const dataUrl = await domtoimage.toJpeg(imageRef.current, {
-          quality: 0.95,
-          width: 300,
-          height: 300,
-        });
-
-        let link = document.createElement("a");
-        link.download = "sticker-smash.jpeg";
-        link.href = dataUrl;
-        link.click();
-      } catch (e) {
-        console.log(e);
       }
     }
   };
