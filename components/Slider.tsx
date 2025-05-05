@@ -88,7 +88,7 @@ export default function Slider({
 
   return (
     <>
-      <Text style={styles.value}>Value: {Math.round(value * 100)}%</Text>{" "}
+      <Text style={styles.value}>Value: {Math.round(value * 100)}%</Text>
       <GestureDetector gesture={sliderTapGesture}>
         <View style={styles.container}>
           {/* Gradient Track */}

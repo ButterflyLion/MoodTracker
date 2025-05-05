@@ -8,6 +8,8 @@ import StartButton from "@/components/StartButton";
 export default function HomeScreen() {
   const router = useRouter();
 
+  const isSmallScreen = screenWidth < 400;
+
   const handleLogMoodPress = () => {
     getColours().then((trackerColours) => {
       console.log("Tracker colours:", trackerColours);
@@ -26,35 +28,44 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.greetings}>
+      <View
+        style={[
+          styles.greetings,
+          isSmallScreen
+            ? { left: "40%", top: "40%" }
+            : { left: "45%", top: "45%" },
+        ]}
+      >
         <View style={styles.textWrapper}>
           <Text style={styles.title}>Hello there!</Text>
           <Text style={styles.subtitle}>What would you like to do?</Text>
         </View>
-        <StartButton text="Log my mood" onPress={handleLogMoodPress} />
-        <StartButton
-          text="Journal"
-          onPress={() => {
-            // TODO: Navigate to the tracking screen
-          }}
-        />
-        <StartButton
-          text="Go to menu"
-          onPress={() => {
-            // TODO: Navigate to the menu screen
-          }}
-        />
+        <View>
+          <StartButton text="Log my mood" onPress={handleLogMoodPress} />
+          <StartButton
+            text="Journal"
+            onPress={() => {
+              // TODO: Navigate to the tracking screen
+            }}
+          />
+          <StartButton
+            text="Go to menu"
+            onPress={() => {
+              // TODO: Navigate to the menu screen
+            }}
+          />
+        </View>
       </View>
       <OtterDisplay />
     </View>
   );
 }
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const { width: screenWidth } = Dimensions.get("window");
 const maxWidth = screenWidth * 0.5;
 
-const titleFontSize = Math.min(maxWidth * 0.1, 75);
-const subtitleFontSize = Math.min(maxWidth * 0.075, 50);
+const titleFontSize = Math.max(screenWidth * 0.05, 35);
+const subtitleFontSize = Math.max(maxWidth * 0.075, 25);
 
 const styles = StyleSheet.create({
   container: {
@@ -63,9 +74,7 @@ const styles = StyleSheet.create({
   },
   greetings: {
     position: "absolute",
-    top: "45%",
     zIndex: 1,
-    left: "45%",
   },
   textWrapper: {
     padding: 10,
@@ -76,11 +85,13 @@ const styles = StyleSheet.create({
     fontSize: titleFontSize,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "#000",
+    color: "#25292E",
+    maxWidth: maxWidth,
   },
   subtitle: {
     fontFamily: "Jua",
     fontSize: subtitleFontSize,
-    color: "#555",
+    color: "#25292E",
+    maxWidth: maxWidth,
   },
 });
