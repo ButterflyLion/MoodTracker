@@ -216,7 +216,7 @@ export default function MoodLoggerGraph({
         y1={graphSize / 2}
         x2={graphSize}
         y2={graphSize / 2}
-        stroke="black"
+        stroke="#25292E"
         strokeWidth="4"
       />
       {/* Y-Axis (Arousal) */}
@@ -225,7 +225,7 @@ export default function MoodLoggerGraph({
         y1="0"
         x2={graphSize / 2}
         y2={graphSize}
-        stroke="black"
+        stroke="#25292E"
         strokeWidth="4"
       />
 
@@ -235,6 +235,7 @@ export default function MoodLoggerGraph({
         y={graphSize / 2 - 10}
         fontFamily="Jua"
         fontSize={fontSize}
+        fill="#25292E"
       >
         Positive
       </SvgText>
@@ -243,6 +244,7 @@ export default function MoodLoggerGraph({
         y={graphSize / 2 - 10}
         fontFamily="Jua"
         fontSize={fontSize}
+        fill="#25292E"
       >
         Negative
       </SvgText>
@@ -251,6 +253,7 @@ export default function MoodLoggerGraph({
         y={Math.max(fontSize + 10, 30)} // Ensure it doesn't go off the top
         fontFamily="Jua"
         fontSize={fontSize}
+        fill="#25292E"
       >
         High Arousal
       </SvgText>
@@ -259,6 +262,7 @@ export default function MoodLoggerGraph({
         y={graphSize - fontSize / 2} // Adjust based on font size to prevent overlap at the bottom
         fontFamily="Jua"
         fontSize={fontSize}
+        fill="#25292E"
       >
         Low Arousal
       </SvgText>

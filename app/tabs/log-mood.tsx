@@ -282,9 +282,11 @@ const styles = StyleSheet.create({
     fontFamily: "Jua",
     fontSize: titleFontSize,
     fontWeight: "bold",
-    marginBottom: 5,
     color: "#25292E",
-    maxWidth: maxWidth,
+    marginVertical: height * 0.05,
+    textAlign: "center",
+    position: "relative",
+    alignContent: "center",
   },
   scrollContainer: {
     flexGrow: 1,
@@ -314,5 +316,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize,
     fontWeight: "bold",
     marginBottom: 10,
+    color: "#25292E",
   },
 });
