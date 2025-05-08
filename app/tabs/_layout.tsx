@@ -34,7 +34,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="menu"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -47,6 +47,20 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="about"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={
+                focused ? "information-circle" : "information-circle-outline"
+              }
+              size={iconSize}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="index"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons

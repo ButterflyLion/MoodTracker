@@ -2,25 +2,32 @@ import * as React from "react";
 import { StyleSheet, Dimensions, View } from "react-native";
 import PuddleSvg from "@/components/Puddle";
 import OtterIllustration from "./OtterIllustration";
+import SittingOtterIllustration from "./SittingOtterIllustration";
+
+interface Props {
+  screen: string;
+}
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function OtterDisplay() {
-  const aspectRatio = 290 / 399;
-  
-    const maxWidth = screenWidth * 0.8;
-    const maxHeight = screenHeight * 0.7;
-    const otterWidth = Math.min(maxWidth, maxHeight * aspectRatio);
-    const otterHeight = otterWidth / aspectRatio;
+export default function OtterDisplay({ screen }: Props) {
+  const maxWidth = screenWidth * 0.8;
+  const maxHeight = screenHeight * 0.7;
 
   return (
     <View style={styles.otterDisplay}>
-      <View style={styles.puddleDisplay}>
-        <PuddleSvg otterWidth={otterWidth} otterHeight={otterHeight} />
-      </View>
-      
+      {screen === "index" ? (
+        <View style={styles.puddleDisplay}>
+          <PuddleSvg maxWidth={maxWidth} maxHeight={maxHeight} />
+        </View>
+      ) : null}
+
       <View style={styles.otterIllustrationWrapper}>
-        <OtterIllustration otterWidth={otterWidth} otterHeight={otterHeight} />
+        {screen === "index" ? (
+          <OtterIllustration maxWidth={maxWidth} maxHeight={maxHeight} />
+        ) : (
+          <SittingOtterIllustration maxWidth={maxWidth} maxHeight={maxHeight} />
+        )}
       </View>
     </View>
   );
@@ -42,5 +49,5 @@ const styles = StyleSheet.create({
     top: "15%",
     right: "12%",
     width: "100%",
-  }
+  },
 });

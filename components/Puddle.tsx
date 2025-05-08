@@ -1,17 +1,15 @@
 import React from "react";
-import { Dimensions, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-
-export default function PuddleSvg({otterWidth, otterHeight,}: {otterWidth: number; otterHeight: number;}) {
+export default function PuddleSvg({maxWidth, maxHeight,}: {maxWidth: number; maxHeight: number;}) {
   const aspectRatio = 485 / 385;
 
-  const maxWidth = screenWidth * 0.8;
-  const maxHeight = screenHeight * 0.7;
   const width = Math.min(maxWidth, maxHeight * aspectRatio);
   const strokeWidth = Math.max(width / 70, 5);
 
+  const otterAspectRatio = 290 / 399;
+  const otterWidth = Math.min(maxWidth, maxHeight * otterAspectRatio);
   const puddleWidth = otterWidth * 2;
   const puddleHeight = puddleWidth / aspectRatio;
 

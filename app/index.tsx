@@ -21,7 +21,7 @@ export default function HomeScreen() {
           },
         });
       } else {
-        router.push("/colour-picker");
+        router.push("/user-preferences");
       }
     });
   };
@@ -51,12 +51,12 @@ export default function HomeScreen() {
           <StartButton
             text="Go to menu"
             onPress={() => {
-              // TODO: Navigate to the menu screen
+              router.push("/tabs/menu");
             }}
           />
         </View>
       </View>
-      <OtterDisplay />
+      <OtterDisplay screen="index" />
     </View>
   );
 }

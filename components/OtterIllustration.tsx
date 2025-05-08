@@ -2,7 +2,10 @@ import * as React from "react";
 import { View, StyleSheet } from "react-native";
 import Svg, { Path, Ellipse } from "react-native-svg";
 
-export default function OtterIllustration({ otterWidth, otterHeight }: { otterWidth: number; otterHeight: number }) {
+export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: number; maxHeight: number }) {
+  const aspectRatio = 290 / 399;
+  const otterWidth = Math.min(maxWidth, maxHeight * aspectRatio);
+  const otterHeight = otterWidth / aspectRatio;
 
   return (
     <View style={styles.otterContainer}>
