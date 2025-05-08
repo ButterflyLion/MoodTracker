@@ -24,22 +24,21 @@ import MoodLoggerGraph from "@/components/MoodLoggerGraph";
 import Slider from "@/components/Slider";
 import { useSearchParams } from "expo-router/build/hooks";
 import * as colourUtils from "@/assets/utils/colour-utils";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
 const { width: width, height: height } = Dimensions.get("window");
-const fontSize = Math.min(width * 0.03, 50);
+const maxWidth = width * 0.5;
+const titleFontSize = Math.max(width * 0.04, 35);
+const fontSize = Math.max(height * 0.025, 40);
 
-const GRAPH_SCALE = 0.8;
-const GRAPH_CONTAINER_WIDTH = width * GRAPH_SCALE;
-const GRAPH_CONTAINER_HEIGHT = height * GRAPH_SCALE;
-const GRAPH_SIZE = Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT) - 40;
-
-const PLEASANT = "#E1DE47";
-const UNPLEASANT = "#8F53DD";
-const HIGH_AROUSAL = "#E05300";
-const LOW_AROUSAL = "#9FBBCD";
+const GRAPH_CONTAINER_WIDTH = width * 0.85;
+const GRAPH_CONTAINER_HEIGHT = height * 0.55;
+const GRAPH_SIZE = Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT);
 
 export default function MoodTrackerScreen() {
   const [isClient, setIsClient] = useState(false);
+
   // Start dot in the middle of the graph
   const translateX = useSharedValue(GRAPH_SIZE / 2);
   const translateY = useSharedValue(GRAPH_SIZE / 2);
@@ -70,10 +69,10 @@ export default function MoodTrackerScreen() {
     mediumLowArousal,
     lowArousal,
   } = colourUtils.generateMoodColors({
-    pleasant: moodTrackerColours?.pleasant || PLEASANT, // Default PLEASANT
-    unpleasant: moodTrackerColours?.unpleasant || UNPLEASANT, // Default UNPLEASANT
-    highArousal: moodTrackerColours?.highArousal || HIGH_AROUSAL, // Default HIGH_AROUSAL
-    lowArousal: moodTrackerColours?.lowArousal || LOW_AROUSAL, // Default LOW_AROUSAL
+    pleasant: moodTrackerColours?.pleasant || colourUtils.PLEASANT, // Default PLEASANT
+    unpleasant: moodTrackerColours?.unpleasant || colourUtils.UNPLEASANT, // Default UNPLEASANT
+    highArousal: moodTrackerColours?.highArousal || colourUtils.HIGH_AROUSAL, // Default HIGH_AROUSAL
+    lowArousal: moodTrackerColours?.lowArousal || colourUtils.LOW_AROUSAL, // Default LOW_AROUSAL
   });
 
   useAnimatedReaction(
@@ -201,6 +200,7 @@ export default function MoodTrackerScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <Text style={styles.title}>How are you feeling?</Text>
       <GestureHandlerRootView style={styles.container}>
         {/* Graph */}
         <GestureDetector gesture={Gesture.Exclusive(dragGesture, graphTapGesture)}>
@@ -239,8 +239,13 @@ export default function MoodTrackerScreen() {
               updateGraphFromSliders(value, arousal.value);
             }}
             trackColours={[unpleasant, neutralPleasantness, pleasant]}
-            // Happy by Xinh Studio from <a href="https://thenounproject.com/browse/icons/term/happy/" target="_blank" title="Happy Icons">Noun Project</a> (CC BY 3.0)
-            sliderImageUrl={require("@/assets/images/pleasantness.png")}
+            thumbComponent={
+              <Fontisto
+                name="smiley"
+                size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
+                color="#25292E"
+              />
+            }
           />
           <Text style={styles.sliderLabel}>Arousal</Text>
           <Slider
@@ -253,8 +258,13 @@ export default function MoodTrackerScreen() {
               updateGraphFromSliders(pleasantness.value, invertedValue);
             }}
             trackColours={[lowArousal, neutralArousal, highArousal]}
-            // Energy by UNKNOWN from <a href="https://thenounproject.com/browse/icons/term/energy/" target="_blank" title="Energy Icons">Noun Project</a> (CC BY 3.0)
-            sliderImageUrl={require("@/assets/images/energy.png")}
+            thumbComponent={
+              <SimpleLineIcons
+                name="energy"
+                size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
+                color="#25292E"
+              />
+            }
           />
         </View>
       </GestureHandlerRootView>
@@ -263,10 +273,18 @@ export default function MoodTrackerScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  title: {
+    fontFamily: "Jua",
+    fontSize: titleFontSize,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#25292E",
+    maxWidth: maxWidth,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -283,17 +301,13 @@ const styles = StyleSheet.create({
     width: GRAPH_SIZE / 20,
     height: GRAPH_SIZE / 20,
     borderRadius: GRAPH_SIZE / 40,
-    borderColor: "#000",
+    borderColor: "#25292E",
     borderWidth: 5,
     position: "absolute",
   },
   slidersContainer: {
     width: GRAPH_SIZE,
     marginTop: 20,
-  },
-  slider: {
-    height: 40,
-    marginBottom: 20,
   },
   sliderLabel: {
     fontFamily: "Jua",

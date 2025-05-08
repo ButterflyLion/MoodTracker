@@ -2,11 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type RGB = { r: number; g: number; b: number };
 
+export const PLEASANT = "#E1DE47";
+export const UNPLEASANT = "#8F53DD";
+export const HIGH_AROUSAL = "#E05300";
+export const LOW_AROUSAL = "#9FBBCD";
+
 export interface Colours {
-  highArousal: string;
-  lowArousal: string;
   pleasant: string;
   unpleasant: string;
+  highArousal: string;
+  lowArousal: string;
 }
 
 export async function getColours() {

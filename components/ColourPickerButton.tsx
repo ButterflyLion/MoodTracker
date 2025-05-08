@@ -55,9 +55,8 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: borderRadius,
     borderWidth: borderWidth,
-    borderColor: "#000",
+    borderColor: "#25292E",
     position: "relative",
-    margin: 10,
     width: "100%",
     maxWidth: maxWidth,
     maxHeight: maxHeight,
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Jua",
     fontSize: fontSize,
-    color: "#000",
+    color: "#25292E",
     textAlign: "center",
     position: "relative",
   },

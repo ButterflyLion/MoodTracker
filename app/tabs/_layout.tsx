@@ -1,18 +1,23 @@
+import { Dimensions } from "react-native";
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const tabBarHeight = Math.max(screenHeight * 0.08, 60);
+const iconSize = Math.max(screenWidth * 0.025, 30);
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#ffd33d",
-        headerStyle: {
-          backgroundColor: "#25292e",
-        },
-        headerTintColor: "#fff",
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: "#20B8D2",
+        tabBarInactiveTintColor: "#C7F0FF",
         tabBarStyle: {
-          backgroundColor: "#25292e",
+          backgroundColor: "#25292E",
+          height: tabBarHeight,
         },
       }}
     >
@@ -22,7 +27,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <AntDesign
               name={focused ? "pluscircle" : "pluscircleo"}
-              size={24}
+              size={iconSize}
               color={color}
             />
           ),
@@ -34,7 +39,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "home-sharp" : "home-outline"}
-              size={24}
+              size={iconSize}
               color={color}
             />
           ),
@@ -48,7 +53,7 @@ export default function TabLayout() {
               name={
                 focused ? "information-circle" : "information-circle-outline"
               }
-              size={24}
+              size={iconSize}
               color={color}
             />
           ),

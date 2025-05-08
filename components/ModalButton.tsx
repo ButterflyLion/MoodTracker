@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-const maxWidth = screenWidth * 0.4;
+const maxWidth = screenWidth * 0.8;
 const maxHeight = screenHeight * 0.1;
 
 const fontSize = Math.min(maxWidth * 0.08, 50);
@@ -18,11 +18,18 @@ const borderRadius = Math.min(maxWidth * 0.05, 20);
 interface Props {
   type: "select" | "cancel" | string;
   text?: string;
+  textColour?: string;
   onPress?: (event: GestureResponderEvent) => void;
   colour: string;
 }
 
-export default function StartButton({ type, onPress, text, colour }: Props) {
+export default function ModalButton({
+  type,
+  onPress,
+  text,
+  textColour = "#25292E",
+  colour,
+}: Props) {
   switch (type) {
     case "select":
       return (
@@ -31,7 +38,7 @@ export default function StartButton({ type, onPress, text, colour }: Props) {
           onPress={onPress}
           activeOpacity={0.8}
         >
-          <Text style={styles.text}>Select</Text>
+          <Text style={[styles.text, { color: textColour }]}>Select</Text>
         </TouchableOpacity>
       );
     case "cancel":
@@ -41,17 +48,20 @@ export default function StartButton({ type, onPress, text, colour }: Props) {
           onPress={onPress}
           activeOpacity={0.8}
         >
-          <Text style={styles.text}>Cancel</Text>
+          <Text style={[styles.text, { color: textColour }]}>Cancel</Text>
         </TouchableOpacity>
       );
     default:
       return (
         <TouchableOpacity
-          style={[styles.selectContainer, { backgroundColor: colour }]}
+          style={[
+            styles.otherContainer,
+            { backgroundColor: colour, borderColor: textColour },
+          ]}
           onPress={onPress}
           activeOpacity={0.8}
         >
-          <Text style={styles.text}>{text}</Text>
+          <Text style={[styles.text, { color: textColour }]}>{text}</Text>
         </TouchableOpacity>
       );
   }
@@ -64,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: borderRadius,
     borderWidth: borderWidth,
-    borderColor: "#000",
+    borderColor: "#25292E",
     position: "relative",
     margin: 10,
     maxWidth: maxWidth,
@@ -78,7 +88,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: borderRadius,
     borderWidth: borderWidth,
-    borderColor: "#000",
+    borderColor: "#25292E",
+    position: "relative",
+    margin: 10,
+    maxWidth: maxWidth,
+    maxHeight: maxHeight,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  otherContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: borderRadius,
+    borderWidth: borderWidth,
     position: "relative",
     margin: 10,
     maxWidth: maxWidth,
@@ -89,8 +112,8 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Jua",
     fontSize: fontSize,
-    color: "#000",
     textAlign: "center",
     position: "relative",
+    color: "#25292E",
   },
 });

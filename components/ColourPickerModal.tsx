@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: borderRadius,
     borderWidth: borderWidth,
-    borderColor: "#000",
+    borderColor: "#25292E",
   },
   modalContent: {
     backgroundColor: "#FFF",
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     fontSize: modatlTitleFontSize,
     fontWeight: "bold",
     marginBottom: 10,
+    color: "#25292E",
   },
   modalComponent: {
     padding: 15,

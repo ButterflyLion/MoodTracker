@@ -22,8 +22,8 @@ interface ColourPickerModalProps {
   graphSize: number;
 }
 
-const { width: width, height: height } = Dimensions.get("window");
-const fontSize = Math.min(width * 0.03, 50);
+const { height: height } = Dimensions.get("window");
+const fontSize = Math.max(height * 0.025, 40);
 
 export default function MoodLoggerGraph({
   high_arousal,
@@ -256,7 +256,7 @@ export default function MoodLoggerGraph({
       </SvgText>
       <SvgText
         x={graphSize / 2 + 10}
-        y={graphSize - (fontSize / 2)} // Adjust based on font size to prevent overlap at the bottom
+        y={graphSize - fontSize / 2} // Adjust based on font size to prevent overlap at the bottom
         fontFamily="Jua"
         fontSize={fontSize}
       >
