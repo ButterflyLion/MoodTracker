@@ -28,7 +28,6 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
 const { width: width, height: height } = Dimensions.get("window");
-const maxWidth = width * 0.5;
 const titleFontSize = Math.max(width * 0.04, 35);
 const fontSize = Math.max(height * 0.025, 40);
 
@@ -56,6 +55,9 @@ export default function MoodTrackerScreen() {
   const moodTrackerColours = searchParams.get("moodTrackerColours")
     ? JSON.parse(searchParams.get("moodTrackerColours")!)
     : null;
+    console.log("moodTrackerColours", moodTrackerColours);
+  const selectedTracker = searchParams.get("selectedTracker");
+    console.log("selectedTracker", selectedTracker);
 
   const {
     pleasant,
@@ -190,6 +192,161 @@ export default function MoodTrackerScreen() {
     offsetY.value = newY;
   };
 
+  const renderSelectedTracker = () => {
+    switch (selectedTracker) {
+      case "graph":
+        return (
+          <>
+            {/* Graph */}
+            <GestureDetector
+              gesture={Gesture.Exclusive(dragGesture, graphTapGesture)}
+            >
+              <Animated.View style={styles.graphContainer}>
+                <MoodLoggerGraph
+                  pleasant={pleasant}
+                  medium_pleasantness={mediumPleasantness}
+                  neutral_pleasantness={neutralPleasantness}
+                  medium_unpleasantness={mediumUnpleasantness}
+                  unpleasant={unpleasant}
+                  high_arousal={highArousal}
+                  medium_high_arousal={mediumHighArousal}
+                  neutral_arousal={neutralArousal}
+                  medium_low_arousal={mediumLowArousal}
+                  low_arousal={lowArousal}
+                  graphSize={GRAPH_SIZE}
+                />
+
+                {/* Draggable Point */}
+                <Animated.View
+                  style={[styles.draggablePoint, animatedStyle, dotColour]}
+                />
+              </Animated.View>
+            </GestureDetector>
+          </>
+        );
+      case "slider":
+        return (
+          <>
+            {/* Sliders */}
+            <View style={styles.slidersContainer}>
+              <Text style={styles.sliderLabel}>Pleasantness</Text>
+              <Slider
+                sliderWidth={GRAPH_SIZE}
+                buttonHeight={GRAPH_SIZE / 20}
+                value={pleasantnessState}
+                onValueChange={(value) => {
+                  translateX.value = value * GRAPH_SIZE;
+                  updateGraphFromSliders(value, arousal.value);
+                }}
+                trackColours={[unpleasant, neutralPleasantness, pleasant]}
+                thumbComponent={
+                  <Fontisto
+                    name="smiley"
+                    size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
+                    color="#25292E"
+                  />
+                }
+              />
+              <Text style={styles.sliderLabel}>Arousal</Text>
+              <Slider
+                sliderWidth={GRAPH_SIZE}
+                buttonHeight={GRAPH_SIZE / 20}
+                value={1 - arousalState}
+                onValueChange={(value) => {
+                  const invertedValue = 1 - value;
+                  translateY.value = invertedValue * GRAPH_SIZE;
+                  updateGraphFromSliders(pleasantness.value, invertedValue);
+                }}
+                trackColours={[lowArousal, neutralArousal, highArousal]}
+                thumbComponent={
+                  <SimpleLineIcons
+                    name="energy"
+                    size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
+                    color="#25292E"
+                  />
+                }
+              />
+            </View>
+          </>
+        );
+      case "both":
+        return (
+          <>
+            {/* Graph */}
+            <GestureDetector
+              gesture={Gesture.Exclusive(dragGesture, graphTapGesture)}
+            >
+              <Animated.View style={styles.graphContainer}>
+                <MoodLoggerGraph
+                  pleasant={pleasant}
+                  medium_pleasantness={mediumPleasantness}
+                  neutral_pleasantness={neutralPleasantness}
+                  medium_unpleasantness={mediumUnpleasantness}
+                  unpleasant={unpleasant}
+                  high_arousal={highArousal}
+                  medium_high_arousal={mediumHighArousal}
+                  neutral_arousal={neutralArousal}
+                  medium_low_arousal={mediumLowArousal}
+                  low_arousal={lowArousal}
+                  graphSize={GRAPH_SIZE}
+                />
+
+                {/* Draggable Point */}
+                <Animated.View
+                  style={[styles.draggablePoint, animatedStyle, dotColour]}
+                />
+              </Animated.View>
+            </GestureDetector>
+
+            {/* Sliders */}
+            <View style={styles.slidersContainer}>
+              <Text style={styles.sliderLabel}>Pleasantness</Text>
+              <Slider
+                sliderWidth={GRAPH_SIZE}
+                buttonHeight={GRAPH_SIZE / 20}
+                value={pleasantnessState}
+                onValueChange={(value) => {
+                  translateX.value = value * GRAPH_SIZE;
+                  updateGraphFromSliders(value, arousal.value);
+                }}
+                trackColours={[unpleasant, neutralPleasantness, pleasant]}
+                thumbComponent={
+                  <Fontisto
+                    name="smiley"
+                    size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
+                    color="#25292E"
+                  />
+                }
+              />
+              <Text style={styles.sliderLabel}>Arousal</Text>
+              <Slider
+                sliderWidth={GRAPH_SIZE}
+                buttonHeight={GRAPH_SIZE / 20}
+                value={1 - arousalState}
+                onValueChange={(value) => {
+                  const invertedValue = 1 - value;
+                  translateY.value = invertedValue * GRAPH_SIZE;
+                  updateGraphFromSliders(pleasantness.value, invertedValue);
+                }}
+                trackColours={[lowArousal, neutralArousal, highArousal]}
+                thumbComponent={
+                  <SimpleLineIcons
+                    name="energy"
+                    size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
+                    color="#25292E"
+                  />
+                }
+              />
+            </View>
+          </>
+        );
+      default:
+        return (
+          <Text>Invalid tracker selected</Text>
+        )
+    }
+  };
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -201,79 +358,13 @@ export default function MoodTrackerScreen() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Text style={styles.title}>How are you feeling?</Text>
-      <GestureHandlerRootView style={styles.container}>
-        {/* Graph */}
-        <GestureDetector gesture={Gesture.Exclusive(dragGesture, graphTapGesture)}>
-          <Animated.View style={styles.graphContainer}>
-            <MoodLoggerGraph
-              pleasant={pleasant}
-              medium_pleasantness={mediumPleasantness}
-              neutral_pleasantness={neutralPleasantness}
-              medium_unpleasantness={mediumUnpleasantness}
-              unpleasant={unpleasant}
-              high_arousal={highArousal}
-              medium_high_arousal={mediumHighArousal}
-              neutral_arousal={neutralArousal}
-              medium_low_arousal={mediumLowArousal}
-              low_arousal={lowArousal}
-              graphSize={GRAPH_SIZE}
-            />
-
-            {/* Draggable Point */}
-
-            <Animated.View
-              style={[styles.draggablePoint, animatedStyle, dotColour]}
-            />
-          </Animated.View>
-        </GestureDetector>
-
-        {/* Sliders */}
-        <View style={styles.slidersContainer}>
-          <Text style={styles.sliderLabel}>Pleasantness</Text>
-          <Slider
-            sliderWidth={GRAPH_SIZE}
-            buttonHeight={GRAPH_SIZE / 20}
-            value={pleasantnessState}
-            onValueChange={(value) => {
-              translateX.value = value * GRAPH_SIZE;
-              updateGraphFromSliders(value, arousal.value);
-            }}
-            trackColours={[unpleasant, neutralPleasantness, pleasant]}
-            thumbComponent={
-              <Fontisto
-                name="smiley"
-                size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
-                color="#25292E"
-              />
-            }
-          />
-          <Text style={styles.sliderLabel}>Arousal</Text>
-          <Slider
-            sliderWidth={GRAPH_SIZE}
-            buttonHeight={GRAPH_SIZE / 20}
-            value={1 - arousalState}
-            onValueChange={(value) => {
-              const invertedValue = 1 - value;
-              translateY.value = invertedValue * GRAPH_SIZE;
-              updateGraphFromSliders(pleasantness.value, invertedValue);
-            }}
-            trackColours={[lowArousal, neutralArousal, highArousal]}
-            thumbComponent={
-              <SimpleLineIcons
-                name="energy"
-                size={(GRAPH_SIZE / 20) * (44 / 34) * 0.9}
-                color="#25292E"
-              />
-            }
-          />
-        </View>
-      </GestureHandlerRootView>
+      <GestureHandlerRootView style={styles.container}>{renderSelectedTracker()}</GestureHandlerRootView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
+  container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
