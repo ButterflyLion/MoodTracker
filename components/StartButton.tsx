@@ -9,7 +9,7 @@ import {
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const maxWidth = screenWidth * 0.5;
-const maxHeight = screenHeight * 0.1;
+const maxHeight = screenHeight * 0.105;
 
 const fontSize = Math.max(maxWidth * 0.07, 25);
 const borderWidth = Math.min(maxWidth * 0.015, 7);

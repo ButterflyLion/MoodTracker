@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import { View, Text, Dimensions, StyleSheet, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { getColours } from "@/assets/utils/colour-utils";
+import { getTrackerType } from "@/assets/utils/tracker-utils";
 import OtterDisplay from "@/components/OtterDisplay";
 import StartButton from "@/components/StartButton";
 
@@ -10,54 +11,63 @@ export default function HomeScreen() {
 
   const isSmallScreen = screenWidth < 400;
 
-  const handleLogMoodPress = () => {
-    getColours().then((trackerColours) => {
+  const handleLogMoodPress = async () => {
+    try {
+      const trackerColours = await getColours();
       console.log("Tracker colours:", trackerColours);
-      if (trackerColours !== null) {
+      const trackerType = await getTrackerType();
+      console.log("Tracker type:", trackerType);
+
+      if (trackerColours !== null && trackerType !== null) {
         router.push({
           pathname: "/tabs/log-mood",
           params: {
             moodTrackerColours: JSON.stringify(trackerColours),
+            trackerType: JSON.stringify(trackerType),
           },
         });
       } else {
         router.push("/user-preferences");
       }
-    });
+    } catch (error) {
+      console.error("Error retrieving tracker colours:", error);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <View
-        style={[
-          styles.greetings,
-          isSmallScreen
-            ? { left: "40%", top: "40%" }
-            : { left: "45%", top: "45%" },
-        ]}
-      >
-        <View style={styles.textWrapper}>
-          <Text style={styles.title}>Hello there!</Text>
-          <Text style={styles.subtitle}>What would you like to do?</Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.greetings,
+            isSmallScreen
+              ? { left: "40%", top: "40%" }
+              : { left: "45%", top: "40%" },
+          ]}
+        >
+          <View style={styles.textWrapper}>
+            <Text style={styles.title}>Hello there!</Text>
+            <Text style={styles.subtitle}>What would you like to do?</Text>
+          </View>
+          <View>
+            <StartButton text="Log my mood" onPress={handleLogMoodPress} />
+            <StartButton
+              text="Journal"
+              onPress={() => {
+                // TODO: Navigate to the tracking screen
+              }}
+            />
+            <StartButton
+              text="Go to menu"
+              onPress={() => {
+                router.push("/tabs/menu");
+              }}
+            />
+          </View>
         </View>
-        <View>
-          <StartButton text="Log my mood" onPress={handleLogMoodPress} />
-          <StartButton
-            text="Journal"
-            onPress={() => {
-              // TODO: Navigate to the tracking screen
-            }}
-          />
-          <StartButton
-            text="Go to menu"
-            onPress={() => {
-              router.push("/tabs/menu");
-            }}
-          />
-        </View>
+        <OtterDisplay screen="index" />
       </View>
-      <OtterDisplay screen="index" />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -68,9 +78,13 @@ const titleFontSize = Math.max(screenWidth * 0.05, 35);
 const subtitleFontSize = Math.max(maxWidth * 0.075, 25);
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    backgroundColor: "#74D4E5",
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
-    backgroundColor: "#74D4E5",
   },
   greetings: {
     position: "absolute",

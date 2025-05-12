@@ -55,9 +55,9 @@ export default function MoodTrackerScreen() {
   const moodTrackerColours = searchParams.get("moodTrackerColours")
     ? JSON.parse(searchParams.get("moodTrackerColours")!)
     : null;
-    console.log("moodTrackerColours", moodTrackerColours);
-  const selectedTracker = searchParams.get("selectedTracker");
-    console.log("selectedTracker", selectedTracker);
+  const trackerType = searchParams.get("trackerType")
+    ? JSON.parse(searchParams.get("trackerType")!)
+    : null;
 
   const {
     pleasant,
@@ -193,7 +193,7 @@ export default function MoodTrackerScreen() {
   };
 
   const renderSelectedTracker = () => {
-    switch (selectedTracker) {
+    switch (trackerType) {
       case "graph":
         return (
           <>
@@ -341,9 +341,7 @@ export default function MoodTrackerScreen() {
           </>
         );
       default:
-        return (
-          <Text>Invalid tracker selected</Text>
-        )
+        return <Text>Invalid tracker selected</Text>;
     }
   };
 
@@ -358,7 +356,9 @@ export default function MoodTrackerScreen() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Text style={styles.title}>How are you feeling?</Text>
-      <GestureHandlerRootView style={styles.container}>{renderSelectedTracker()}</GestureHandlerRootView>
+      <GestureHandlerRootView style={styles.container}>
+        {renderSelectedTracker()}
+      </GestureHandlerRootView>
     </ScrollView>
   );
 }
