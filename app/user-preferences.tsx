@@ -9,8 +9,8 @@ import { useRouter } from "expo-router";
 export default function UserPreferences() {
   const router = useRouter();
   const [colours, setColours] = useState<colourUtils.Colours>({
-    highArousal: "#FFFFFF",
-    lowArousal: "#FFFFFF",
+    highEnergy: "#FFFFFF",
+    lowEnergy: "#FFFFFF",
     pleasant: "#FFFFFF",
     unpleasant: "#FFFFFF",
   });

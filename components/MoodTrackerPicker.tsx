@@ -39,17 +39,17 @@ export default function MoodTrackerPicker({ colours }: Props) {
     neutralPleasantness,
     mediumUnpleasantness,
     unpleasant,
-    highArousal,
-    mediumHighArousal,
-    neutralArousal,
-    mediumLowArousal,
-    lowArousal,
+    highEnergy,
+    mediumHighEnergy,
+    neutralEnergy,
+    mediumLowEnergy,
+    lowEnergy,
   } = useMemo(() => {
     return colourUtils.generateMoodColors({
       pleasant: colours.pleasant,
       unpleasant: colours.unpleasant,
-      highArousal: colours.highArousal,
-      lowArousal: colours.lowArousal,
+      highEnergy: colours.highEnergy,
+      lowEnergy: colours.lowEnergy,
     });
   }, [colours]);
 
@@ -77,11 +77,11 @@ export default function MoodTrackerPicker({ colours }: Props) {
           neutral_pleasantness={neutralPleasantness}
           medium_unpleasantness={mediumUnpleasantness}
           unpleasant={unpleasant}
-          high_arousal={highArousal}
-          medium_high_arousal={mediumHighArousal}
-          neutral_arousal={neutralArousal}
-          medium_low_arousal={mediumLowArousal}
-          low_arousal={lowArousal}
+          high_energy={highEnergy}
+          medium_high_energy={mediumHighEnergy}
+          neutral_energy={neutralEnergy}
+          medium_low_energy={mediumLowEnergy}
+          low_energy={lowEnergy}
           graphSize={GRAPH_SIZE}
         />
         <View style={{ padding: screenHeight * 0.01 }}>
@@ -100,12 +100,12 @@ export default function MoodTrackerPicker({ colours }: Props) {
             }
             disabled={true}
           />
-          <Text style={styles.sliderLabel}>Arousal</Text>
+          <Text style={styles.sliderLabel}>Energy</Text>
           <Slider
             sliderWidth={GRAPH_SIZE}
             buttonHeight={GRAPH_SIZE / 20}
             value={1 - 0.5}
-            trackColours={[lowArousal, neutralArousal, highArousal]}
+            trackColours={[lowEnergy, neutralEnergy, highEnergy]}
             thumbComponent={
               <SimpleLineIcons
                 name="energy"
@@ -135,11 +135,11 @@ export default function MoodTrackerPicker({ colours }: Props) {
           neutral_pleasantness={neutralPleasantness}
           medium_unpleasantness={mediumUnpleasantness}
           unpleasant={unpleasant}
-          high_arousal={highArousal}
-          medium_high_arousal={mediumHighArousal}
-          neutral_arousal={neutralArousal}
-          medium_low_arousal={mediumLowArousal}
-          low_arousal={lowArousal}
+          high_energy={highEnergy}
+          medium_high_energy={mediumHighEnergy}
+          neutral_energy={neutralEnergy}
+          medium_low_energy={mediumLowEnergy}
+          low_energy={lowEnergy}
           graphSize={GRAPH_SIZE}
         />
       </TouchableOpacity>
@@ -171,12 +171,12 @@ export default function MoodTrackerPicker({ colours }: Props) {
             }
             disabled={true}
           />
-          <Text style={styles.sliderLabel}>Arousal</Text>
+          <Text style={styles.sliderLabel}>Energy</Text>
           <Slider
             sliderWidth={GRAPH_SIZE}
             buttonHeight={GRAPH_SIZE / 20}
             value={1 - 0.5}
-            trackColours={[lowArousal, neutralArousal, highArousal]}
+            trackColours={[lowEnergy, neutralEnergy, highEnergy]}
             thumbComponent={
               <SimpleLineIcons
                 name="energy"

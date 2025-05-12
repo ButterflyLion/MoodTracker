@@ -9,11 +9,11 @@ import Svg, {
 } from "react-native-svg";
 
 interface ColourPickerModalProps {
-  high_arousal: string;
-  medium_high_arousal: string;
-  neutral_arousal: string;
-  medium_low_arousal: string;
-  low_arousal: string;
+  high_energy: string;
+  medium_high_energy: string;
+  neutral_energy: string;
+  medium_low_energy: string;
+  low_energy: string;
   pleasant: string;
   medium_pleasantness: string;
   neutral_pleasantness: string;
@@ -26,11 +26,11 @@ const { height: height } = Dimensions.get("window");
 const fontSize = Math.max(height * 0.025, 40);
 
 export default function MoodLoggerGraph({
-  high_arousal,
-  medium_high_arousal,
-  neutral_arousal,
-  medium_low_arousal,
-  low_arousal,
+  high_energy,
+  medium_high_energy,
+  neutral_energy,
+  medium_low_energy,
+  low_energy,
   pleasant,
   medium_pleasantness,
   neutral_pleasantness,
@@ -61,9 +61,9 @@ export default function MoodLoggerGraph({
           x2="50%"
           y2="0%"
         >
-          <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="30%" stopColor={medium_high_arousal} />
-          <Stop offset="100%" stopColor={high_arousal} />
+          <Stop offset="0%" stopColor={neutral_energy} />
+          <Stop offset="30%" stopColor={medium_high_energy} />
+          <Stop offset="100%" stopColor={high_energy} />
         </LinearGradient>
 
         {/* Top-Left Quadrant */}
@@ -85,9 +85,9 @@ export default function MoodLoggerGraph({
           x2="50%"
           y2="0%"
         >
-          <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="30%" stopColor={medium_high_arousal} />
-          <Stop offset="100%" stopColor={high_arousal} />
+          <Stop offset="0%" stopColor={neutral_energy} />
+          <Stop offset="30%" stopColor={medium_high_energy} />
+          <Stop offset="100%" stopColor={high_energy} />
         </LinearGradient>
 
         {/* Bottom-Left Quadrant */}
@@ -109,9 +109,9 @@ export default function MoodLoggerGraph({
           x2="50%"
           y2="100%"
         >
-          <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="30%" stopColor={medium_low_arousal} />
-          <Stop offset="100%" stopColor={low_arousal} />
+          <Stop offset="0%" stopColor={neutral_energy} />
+          <Stop offset="30%" stopColor={medium_low_energy} />
+          <Stop offset="100%" stopColor={low_energy} />
         </LinearGradient>
 
         {/* Bottom-Right Quadrant */}
@@ -133,9 +133,9 @@ export default function MoodLoggerGraph({
           x2="50%"
           y2="100%"
         >
-          <Stop offset="0%" stopColor={neutral_arousal} />
-          <Stop offset="30%" stopColor={medium_low_arousal} />
-          <Stop offset="100%" stopColor={low_arousal} />
+          <Stop offset="0%" stopColor={neutral_energy} />
+          <Stop offset="30%" stopColor={medium_low_energy} />
+          <Stop offset="100%" stopColor={low_energy} />
         </LinearGradient>
       </Defs>
 
@@ -219,7 +219,7 @@ export default function MoodLoggerGraph({
         stroke="#25292E"
         strokeWidth="4"
       />
-      {/* Y-Axis (Arousal) */}
+      {/* Y-Axis (Energy) */}
       <Line
         x1={graphSize / 2}
         y1="0"
@@ -255,7 +255,7 @@ export default function MoodLoggerGraph({
         fontSize={fontSize}
         fill="#25292E"
       >
-        High Arousal
+        High Energy
       </SvgText>
       <SvgText
         x={graphSize / 2 + 10}
@@ -264,7 +264,7 @@ export default function MoodLoggerGraph({
         fontSize={fontSize}
         fill="#25292E"
       >
-        Low Arousal
+        Low Energy
       </SvgText>
     </Svg>
   );

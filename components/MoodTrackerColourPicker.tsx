@@ -19,15 +19,15 @@ export default function MoodTrackerColourPicker({
   const [prevColour, setPrevColour] = useState<string>("#FFFFFF");
   const [showModal, setShowModal] = useState(false);
   const [activeKey, setActiveKey] =
-    useState<keyof typeof colours>("highArousal");
+    useState<keyof typeof colours>("highEnergy");
   const [selectedColour, setSelectedColour] = useState<string>(
     colours[activeKey]
   );
 
   const useDefaultColours = () => {
     setColours({
-      highArousal: "#E05300",
-      lowArousal: "#9FBBCD",
+      highEnergy: "#E05300",
+      lowEnergy: "#9FBBCD",
       pleasant: "#E1DE47",
       unpleasant: "#8F53DD",
     });
@@ -35,8 +35,8 @@ export default function MoodTrackerColourPicker({
 
   const clearColours = () => {
     setColours({
-      highArousal: "#FFFFFF",
-      lowArousal: "#FFFFFF",
+      highEnergy: "#FFFFFF",
+      lowEnergy: "#FFFFFF",
       pleasant: "#FFFFFF",
       unpleasant: "#FFFFFF",
     });

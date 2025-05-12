@@ -4,14 +4,14 @@ type RGB = { r: number; g: number; b: number };
 
 export const PLEASANT = "#E1DE47";
 export const UNPLEASANT = "#8F53DD";
-export const HIGH_AROUSAL = "#E05300";
-export const LOW_AROUSAL = "#9FBBCD";
+export const HIGH_ENERGY = "#E05300";
+export const LOW_ENERGY = "#9FBBCD";
 
 export interface Colours {
   pleasant: string;
   unpleasant: string;
-  highArousal: string;
-  lowArousal: string;
+  highEnergy: string;
+  lowEnergy: string;
 }
 
 export async function getColours() {
@@ -83,23 +83,23 @@ export function lerpColor(hex1: string, hex2: string, t: number): string {
 export function generateMoodColors({
   pleasant,
   unpleasant,
-  highArousal,
-  lowArousal,
+  highEnergy,
+  lowEnergy,
 }: {
   pleasant: string;
   unpleasant: string;
-  highArousal: string;
-  lowArousal: string;
+  highEnergy: string;
+  lowEnergy: string;
 }) {
   // Pleasantness Axis
   const neutralPleasantness = lerpColor(pleasant, unpleasant, 0.5);
   const mediumPleasantness = lerpColor(pleasant, neutralPleasantness, 0.5);
   const mediumUnpleasantness = lerpColor(unpleasant, neutralPleasantness, 0.5);
 
-  // Arousal Axis
-  const neutralArousal = lerpColor(highArousal, lowArousal, 0.5);
-  const mediumHighArousal = lerpColor(highArousal, neutralArousal, 0.5);
-  const mediumLowArousal = lerpColor(lowArousal, neutralArousal, 0.5);
+  // Energy Axis
+  const neutralEnergy = lerpColor(highEnergy, lowEnergy, 0.5);
+  const mediumHighEnergy = lerpColor(highEnergy, neutralEnergy, 0.5);
+  const mediumLowEnergy = lerpColor(lowEnergy, neutralEnergy, 0.5);
 
   return {
     pleasant,
@@ -108,10 +108,10 @@ export function generateMoodColors({
     mediumUnpleasantness,
     unpleasant,
 
-    highArousal,
-    mediumHighArousal,
-    neutralArousal,
-    mediumLowArousal,
-    lowArousal,
+    highEnergy,
+    mediumHighEnergy,
+    neutralEnergy,
+    mediumLowEnergy,
+    lowEnergy,
   };
 }

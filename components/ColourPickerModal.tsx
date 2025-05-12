@@ -30,8 +30,8 @@ export default function ColourPickerModal({
   const readableTitles: Record<keyof colourUtils.Colours, string> = {
     pleasant: "Pleasant",
     unpleasant: "Unpleasant",
-    highArousal: "High Energy",
-    lowArousal: "Low Energy",
+    highEnergy: "High Energy",
+    lowEnergy: "Low Energy",
   };
 
   const saveColour = async (selectedColour: string) => {

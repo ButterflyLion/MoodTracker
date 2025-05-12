@@ -29,10 +29,10 @@ export default function ColourPickerButton({ onPress, title, colour }: Props) {
     case "unpleasant":
       title = "Unpleasant";
       break;
-    case "highArousal":
+    case "highEnergy":
       title = "High Energy";
       break;
-    case "lowArousal":
+    case "lowEnergy":
       title = "Low Energy";
       break;
     default:

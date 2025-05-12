@@ -46,10 +46,10 @@ export default function MoodTrackerScreen() {
   const offsetY = useSharedValue(GRAPH_SIZE / 2);
 
   const pleasantness = useDerivedValue(() => translateX.value / GRAPH_SIZE);
-  const arousal = useDerivedValue(() => translateY.value / GRAPH_SIZE);
+  const energy = useDerivedValue(() => translateY.value / GRAPH_SIZE);
 
   const [pleasantnessState, setPleasantnessState] = useState(0.5);
-  const [arousalState, setArousalState] = useState(0.5);
+  const [energyState, setEnergyState] = useState(0.5);
 
   const searchParams = useSearchParams();
   const moodTrackerColours = searchParams.get("moodTrackerColours")
@@ -65,16 +65,16 @@ export default function MoodTrackerScreen() {
     neutralPleasantness,
     mediumUnpleasantness,
     unpleasant,
-    highArousal,
-    mediumHighArousal,
-    neutralArousal,
-    mediumLowArousal,
-    lowArousal,
+    highEnergy,
+    mediumHighEnergy,
+    neutralEnergy,
+    mediumLowEnergy,
+    lowEnergy,
   } = colourUtils.generateMoodColors({
     pleasant: moodTrackerColours?.pleasant || colourUtils.PLEASANT, // Default PLEASANT
     unpleasant: moodTrackerColours?.unpleasant || colourUtils.UNPLEASANT, // Default UNPLEASANT
-    highArousal: moodTrackerColours?.highArousal || colourUtils.HIGH_AROUSAL, // Default HIGH_AROUSAL
-    lowArousal: moodTrackerColours?.lowArousal || colourUtils.LOW_AROUSAL, // Default LOW_AROUSAL
+    highEnergy: moodTrackerColours?.highEnergy || colourUtils.HIGH_ENERGY, // Default HIGH_ENERGY
+    lowEnergy: moodTrackerColours?.lowEnergy || colourUtils.LOW_ENERGY, // Default LOW_ENERGY
   });
 
   useAnimatedReaction(
@@ -85,9 +85,9 @@ export default function MoodTrackerScreen() {
   );
 
   useAnimatedReaction(
-    () => arousal.value,
-    (arousalValue) => {
-      runOnJS(setArousalState)(arousalValue);
+    () => energy.value,
+    (energyValue) => {
+      runOnJS(setEnergyState)(energyValue);
     }
   );
 
@@ -155,22 +155,22 @@ export default function MoodTrackerScreen() {
       ]
     );
 
-    const arousalColour = interpolateColor(
-      arousal.value,
+    const energyColour = interpolateColor(
+      energy.value,
       [0, 0.3, 0.5, 0.7, 1],
       [
-        highArousal,
-        mediumHighArousal,
-        neutralArousal,
-        mediumLowArousal,
-        lowArousal,
+        highEnergy,
+        mediumHighEnergy,
+        neutralEnergy,
+        mediumLowEnergy,
+        lowEnergy,
       ]
     );
 
     const colour = interpolateColor(
       0.5,
       [0, 1],
-      [pleasantnessColour, arousalColour]
+      [pleasantnessColour, energyColour]
     );
 
     return {
@@ -180,10 +180,10 @@ export default function MoodTrackerScreen() {
 
   const updateGraphFromSliders = (
     newPleasantness: number,
-    newArousal: number
+    newEnergy: number
   ) => {
     const newX = newPleasantness * GRAPH_SIZE;
-    const newY = newArousal * GRAPH_SIZE;
+    const newY = newEnergy * GRAPH_SIZE;
 
     translateX.value = newX;
     translateY.value = newY;
@@ -208,11 +208,11 @@ export default function MoodTrackerScreen() {
                   neutral_pleasantness={neutralPleasantness}
                   medium_unpleasantness={mediumUnpleasantness}
                   unpleasant={unpleasant}
-                  high_arousal={highArousal}
-                  medium_high_arousal={mediumHighArousal}
-                  neutral_arousal={neutralArousal}
-                  medium_low_arousal={mediumLowArousal}
-                  low_arousal={lowArousal}
+                  high_energy={highEnergy}
+                  medium_high_energy={mediumHighEnergy}
+                  neutral_energy={neutralEnergy}
+                  medium_low_energy={mediumLowEnergy}
+                  low_energy={lowEnergy}
                   graphSize={GRAPH_SIZE}
                 />
 
@@ -236,7 +236,7 @@ export default function MoodTrackerScreen() {
                 value={pleasantnessState}
                 onValueChange={(value) => {
                   translateX.value = value * GRAPH_SIZE;
-                  updateGraphFromSliders(value, arousal.value);
+                  updateGraphFromSliders(value, energy.value);
                 }}
                 trackColours={[unpleasant, neutralPleasantness, pleasant]}
                 thumbComponent={
@@ -247,17 +247,17 @@ export default function MoodTrackerScreen() {
                   />
                 }
               />
-              <Text style={styles.sliderLabel}>Arousal</Text>
+              <Text style={styles.sliderLabel}>Energy</Text>
               <Slider
                 sliderWidth={GRAPH_SIZE}
                 buttonHeight={GRAPH_SIZE / 20}
-                value={1 - arousalState}
+                value={1 - energyState}
                 onValueChange={(value) => {
                   const invertedValue = 1 - value;
                   translateY.value = invertedValue * GRAPH_SIZE;
                   updateGraphFromSliders(pleasantness.value, invertedValue);
                 }}
-                trackColours={[lowArousal, neutralArousal, highArousal]}
+                trackColours={[lowEnergy, neutralEnergy, highEnergy]}
                 thumbComponent={
                   <SimpleLineIcons
                     name="energy"
@@ -283,11 +283,11 @@ export default function MoodTrackerScreen() {
                   neutral_pleasantness={neutralPleasantness}
                   medium_unpleasantness={mediumUnpleasantness}
                   unpleasant={unpleasant}
-                  high_arousal={highArousal}
-                  medium_high_arousal={mediumHighArousal}
-                  neutral_arousal={neutralArousal}
-                  medium_low_arousal={mediumLowArousal}
-                  low_arousal={lowArousal}
+                  high_energy={highEnergy}
+                  medium_high_energy={mediumHighEnergy}
+                  neutral_energy={neutralEnergy}
+                  medium_low_energy={mediumLowEnergy}
+                  low_energy={lowEnergy}
                   graphSize={GRAPH_SIZE}
                 />
 
@@ -307,7 +307,7 @@ export default function MoodTrackerScreen() {
                 value={pleasantnessState}
                 onValueChange={(value) => {
                   translateX.value = value * GRAPH_SIZE;
-                  updateGraphFromSliders(value, arousal.value);
+                  updateGraphFromSliders(value, energy.value);
                 }}
                 trackColours={[unpleasant, neutralPleasantness, pleasant]}
                 thumbComponent={
@@ -318,17 +318,17 @@ export default function MoodTrackerScreen() {
                   />
                 }
               />
-              <Text style={styles.sliderLabel}>Arousal</Text>
+              <Text style={styles.sliderLabel}>Energy</Text>
               <Slider
                 sliderWidth={GRAPH_SIZE}
                 buttonHeight={GRAPH_SIZE / 20}
-                value={1 - arousalState}
+                value={1 - energyState}
                 onValueChange={(value) => {
                   const invertedValue = 1 - value;
                   translateY.value = invertedValue * GRAPH_SIZE;
                   updateGraphFromSliders(pleasantness.value, invertedValue);
                 }}
-                trackColours={[lowArousal, neutralArousal, highArousal]}
+                trackColours={[lowEnergy, neutralEnergy, highEnergy]}
                 thumbComponent={
                   <SimpleLineIcons
                     name="energy"
