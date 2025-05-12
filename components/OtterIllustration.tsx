@@ -17,12 +17,14 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
         preserveAspectRatio="xMidYMid meet"
         fill="none"
       >
+        {/* Head */}
         <Path
           d="M254.584 68.0225C261.652 82.4358 263.884 97.4586 261.848 110.062C259.812 122.67 253.542 132.723 243.716 137.544C233.89 142.366 222.105 141.173 210.891 135.067C199.682 128.963 189.173 118.002 182.105 103.589C175.037 89.1756 172.805 74.1529 174.84 61.5496C176.877 48.9419 183.147 38.8889 192.973 34.067C202.799 29.2452 214.584 30.4385 225.797 36.5443C237.007 42.648 247.516 53.6091 254.584 68.0225Z"
           fill="#673211"
           stroke="black"
           strokeWidth="3"
         />
+        {/* Whiskers - left side */}
         <Path
           d="M205.28 88.9713C204.645 88.8107 204.002 88.6703 203.373 88.4887C202.777 88.3164 201.316 87.8783 201.03 87.3975"
           stroke="black"
@@ -58,6 +60,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           stroke="black"
           strokeLinecap="round"
         />
+        {/* Face */}
         <Path
           d="M232.37 105.641C233.229 116.786 247.9 125.297 256.217 125.878C208.115 185.072 127.236 40.0563 210.134 32.2268C205.413 40.7415 203.859 60.1437 210.531 71.5475C210.909 72.066 211.267 72.6193 211.603 73.2084C211.224 72.6767 210.867 72.1222 210.531 71.5475C198.486 55.0295 166.347 73.8004 203.718 97.4321C194.076 112.686 233.066 142.855 232.37 105.641C232.339 105.227 232.326 104.809 232.333 104.388C232.35 104.814 232.363 105.232 232.37 105.641Z"
           fill="#9D6D42"
@@ -67,6 +70,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           stroke="black"
           strokeWidth="3"
         />
+        {/* Right eye */}
         <Ellipse
           cx="8.09796"
           cy="6.61177"
@@ -91,12 +95,14 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           transform="matrix(0.862624 -0.505846 0.505591 0.862773 238.26 99.4686)"
           fill="white"
         />
+        {/* Nose */}
         <Path
           d="M213.595 80.161C218.826 76.1911 233.639 94.5695 227.09 99.686C224.47 101.733 213.62 97.5053 211.901 95.527C210.564 93.9888 209.639 83.6006 213.595 80.161Z"
           fill="#332424"
           stroke="black"
           strokeWidth="3"
         />
+        {/* Left eye */}
         <Ellipse
           cx="8.09796"
           cy="6.61177"
@@ -121,6 +127,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           transform="matrix(0.862624 -0.505846 0.505591 0.862773 218.753 68.3744)"
           fill="white"
         />
+        {/* Whiskers - right side */}
         <Path
           d="M212.104 102.73C212.059 103.383 211.991 104.039 211.967 104.693C211.944 105.313 211.904 106.838 212.272 107.26"
           stroke="black"
@@ -156,6 +163,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           stroke="black"
           strokeLinecap="round"
         />
+        {/* Left eyebrows */}
         <Path
           d="M237.861 75.8074C237.89 75.3952 238.408 75.1569 238.581 74.7372C238.77 74.2794 239.339 73.979 239.638 73.5918C240.262 72.7844 240.692 72.2447 240.767 71.1695"
           stroke="black"
@@ -181,6 +189,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           stroke="black"
           strokeLinecap="round"
         />
+        {/* Right eyebrows */}
         <Path
           d="M241.299 80.5752C241.621 80.8351 242.148 80.6184 242.573 80.7778C243.037 80.9515 243.644 80.7399 244.131 80.785C245.147 80.879 245.835 80.9326 246.672 81.6105"
           stroke="black"
@@ -206,6 +215,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           stroke="black"
           strokeLinecap="round"
         />
+        {/* Face lines including mouth */}
         <Path
           d="M198.977 41.2982C195.116 41.0282 191.365 41.8652 189.799 45.659"
           stroke="black"
@@ -230,6 +240,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           strokeWidth="2"
           strokeLinecap="round"
         />
+        {/* Right ear */}
         <Path
           d="M274.02 123.694C275.164 114.644 266.763 114.721 261.235 116.088C259.873 121.189 254.971 128.063 252.196 130.89C253.131 133.833 259.381 139.964 265.41 135.766C272.947 130.518 273.549 127.423 274.02 123.694Z"
           fill="#673211"
@@ -254,6 +265,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           strokeWidth="2"
           strokeLinecap="round"
         />
+        {/* Left ear */}
         <Path
           d="M222.175 19.4425C229.883 24.317 224.479 30.7522 219.907 34.1489C215.107 31.9552 206.686 31.3663 202.741 31.7098C201.065 29.1151 200.313 20.3913 207.387 18.4085C216.228 15.9298 218.998 17.434 222.175 19.4425Z"
           fill="#673211"
@@ -278,6 +290,7 @@ export default function OtterIllustration({ maxWidth, maxHeight }: { maxWidth: n
           strokeWidth="2"
           strokeLinecap="round"
         />
+        {/* Body including tail */}
         <Path
           d="M117.868 103.197C140.913 92.4211 154.326 86.5458 174.061 69.9638C172.035 98.933 195.975 128.479 211.607 135.147C194.139 137.022 179.078 144.021 169.931 164.44C161.86 182.457 159.895 192.849 138.54 214.892C117.185 236.935 108.008 234.096 89.224 256.039C73.7161 274.155 75.2314 296.757 73.3488 323.68C71.7674 346.295 102.932 386.114 121.689 395.368C123.063 395.895 124.436 396.421 125.809 396.947C124.525 396.62 123.144 396.086 121.689 395.368C87.8815 382.397 54.039 368.694 31.1053 325.681C5.89438 278.398 20.1447 234.485 47.3393 173.21C53.1903 160.027 72.4207 124.45 117.868 103.197Z"
           fill="#673211"

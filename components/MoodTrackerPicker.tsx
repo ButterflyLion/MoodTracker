@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as colourUtils from "@/assets/utils/colour-utils";
+import * as trackerUtils from "@/assets/utils/tracker-utils";
 import MoodLoggerGraph from "@/components/MoodLoggerGraph";
 import Slider from "@/components/Slider";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -25,17 +26,13 @@ const GRAPH_CONTAINER_WIDTH = screenWidth * 0.85;
 const GRAPH_CONTAINER_HEIGHT = screenHeight * 0.55;
 const GRAPH_SIZE = Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT);
 
-interface SelectedOptionParams {
-  option: "graph" | "slider" | "both";
-}
-
 interface Props {
   colours: colourUtils.Colours;
 }
 
 export default function MoodTrackerPicker({ colours }: Props) {
   const [selectedOption, setSelectedOption] =
-    useState<SelectedOptionParams | null>(null);
+    useState<trackerUtils.TrackerType | null>(null);
   const {
     pleasant,
     mediumPleasantness,
@@ -56,20 +53,9 @@ export default function MoodTrackerPicker({ colours }: Props) {
     });
   }, [colours]);
 
-  async function saveSelectedOptionToStorage(
-    option: SelectedOptionParams
-  ): Promise<void> {
-    try {
-      await AsyncStorage.setItem("selectedTracker", JSON.stringify(option));
-      console.log("Option saved to storage:", option);
-    } catch (error) {
-      console.error("Error saving selectedTracker to storage:", error);
-    }
-  }
-
-  const handleOptionSelect = (option: SelectedOptionParams) => {
+  const handleOptionSelect = (option: trackerUtils.TrackerType) => {
     setSelectedOption(option);
-    saveSelectedOptionToStorage(option);
+    trackerUtils.saveTrackerTypeToStorage(option.option);
   };
 
   return (

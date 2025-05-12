@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Dimensions, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { getColours } from "@/assets/utils/colour-utils";
+import { getTrackerType } from "@/assets/utils/tracker-utils";
 import MenuButton from "@/components/MenuButton";
 import OtterDisplay from "@/components/OtterDisplay";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -18,20 +19,27 @@ export default function MenuScreen() {
   const isSmallScreen = screenWidth < 400;
   const iconSizeAdjusted = isSmallScreen ? iconSize : iconSize * 0.75;
 
-  const handleLogMoodPress = () => {
-    getColours().then((trackerColours) => {
+  const handleLogMoodPress = async () => {
+    try {
+      const trackerColours = await getColours();
       console.log("Tracker colours:", trackerColours);
-      if (trackerColours !== null) {
+      const trackerType = await getTrackerType();
+      console.log("Tracker type:", trackerType);
+
+      if (trackerColours !== null && trackerType !== null) {
         router.push({
           pathname: "/tabs/log-mood",
           params: {
             moodTrackerColours: JSON.stringify(trackerColours),
+            trackerType: JSON.stringify(trackerType),
           },
         });
       } else {
         router.push("/user-preferences");
       }
-    });
+    } catch (error) {
+      console.error("Error retrieving tracker colours:", error);
+    }
   };
 
   return (
