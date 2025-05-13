@@ -54,7 +54,7 @@ export default function HomeScreen() {
             <StartButton
               text="Journal"
               onPress={() => {
-                // TODO: Navigate to the tracking screen
+                router.push("/tabs/journal");
               }}
             />
             <StartButton

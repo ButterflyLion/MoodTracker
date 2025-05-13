@@ -2,6 +2,7 @@ import { Dimensions } from "react-native";
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const tabBarHeight = Math.max(screenHeight * 0.08, 60);
@@ -46,12 +47,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="about"
+        name="journal"
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
+            <MaterialCommunityIcons
               name={
-                focused ? "information-circle" : "information-circle-outline"
+                focused ? "pencil-circle" : "pencil-circle-outline"
               }
               size={iconSize}
               color={color}
@@ -65,7 +66,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={
-                focused ? "information-circle" : "information-circle-outline"
+                focused ? "bar-chart-sharp" : "bar-chart-outline"
               }
               size={iconSize}
               color={color}

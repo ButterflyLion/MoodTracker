@@ -64,7 +64,7 @@ export default function MenuScreen() {
         <MenuButton
           text="New journal entry"
           onPress={() => {
-            // TODO: Navigate to the tracking screen
+            router.push("/tabs/journal");
           }}
           icon={
             <FontAwesome6 name="add" size={iconSizeAdjusted} color="#25292E" />
@@ -74,7 +74,7 @@ export default function MenuScreen() {
         <MenuButton
           text="View mood history"
           onPress={() => {
-            // TODO: Navigate to the history screen
+            router.push("/tabs");
           }}
           icon={
             <Entypo name="bar-graph" size={iconSizeAdjusted} color="#25292E" />
