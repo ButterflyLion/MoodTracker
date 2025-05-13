@@ -22,10 +22,11 @@ import Animated, {
 } from "react-native-reanimated";
 import MoodLoggerGraph from "@/components/MoodLoggerGraph";
 import Slider from "@/components/Slider";
-import { useSearchParams } from "expo-router/build/hooks";
 import * as colourUtils from "@/assets/utils/colour-utils";
+import { getTrackerType, TrackerType } from "@/assets/utils/tracker-utils";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const { width: width, height: height } = Dimensions.get("window");
 const titleFontSize = Math.max(width * 0.04, 35);
@@ -51,13 +52,28 @@ export default function MoodTrackerScreen() {
   const [pleasantnessState, setPleasantnessState] = useState(0.5);
   const [energyState, setEnergyState] = useState(0.5);
 
-  const searchParams = useSearchParams();
-  const moodTrackerColours = searchParams.get("moodTrackerColours")
-    ? JSON.parse(searchParams.get("moodTrackerColours")!)
-    : null;
-  const trackerType = searchParams.get("trackerType")
-    ? JSON.parse(searchParams.get("trackerType")!)
-    : null;
+  const [moodTrackerColours, setMoodTrackerColours] = useState({
+    pleasant: colourUtils.PLEASANT,
+    unpleasant: colourUtils.UNPLEASANT,
+    highEnergy: colourUtils.HIGH_ENERGY,
+    lowEnergy: colourUtils.LOW_ENERGY,
+  });
+  const [trackerType, setTrackerType] = useState("none");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const coloursString = await colourUtils.getColours();
+      const typeString = await getTrackerType();
+
+      const colours = coloursString ? JSON.parse(coloursString) : null;
+      console.log("colours", colours);
+      const type = typeString ? JSON.parse(typeString) : null;
+      console.log("type", type);
+      setMoodTrackerColours(colours);
+      setTrackerType(type);
+    };
+    fetchData();
+  }, []);
 
   const {
     pleasant,
@@ -195,6 +211,7 @@ export default function MoodTrackerScreen() {
   const renderSelectedTracker = () => {
     switch (trackerType) {
       case "graph":
+        console.log("Graph selected");
         return (
           <>
             {/* Graph */}
@@ -225,6 +242,7 @@ export default function MoodTrackerScreen() {
           </>
         );
       case "slider":
+        console.log("Slider selected");
         return (
           <>
             {/* Sliders */}
@@ -270,6 +288,7 @@ export default function MoodTrackerScreen() {
           </>
         );
       case "both":
+        console.log("Both selected");
         return (
           <>
             {/* Graph */}
@@ -341,6 +360,8 @@ export default function MoodTrackerScreen() {
           </>
         );
       default:
+        console.log("Invalid tracker selected");
+        console.log(trackerType);
         return <Text>Invalid tracker selected</Text>;
     }
   };

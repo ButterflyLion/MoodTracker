@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface TrackerType {
-  option: "graph" | "slider" | "both";
+  option: "graph" | "slider" | "both" | "none";
 }
 
 export async function getTrackerType() {
@@ -20,7 +20,7 @@ export async function getTrackerType() {
 
 export async function saveTrackerTypeToStorage(trackerType: string): Promise<void> {
     try {
-        await AsyncStorage.setItem("trackerType", trackerType);
+        await AsyncStorage.setItem("trackerType", JSON.stringify(trackerType));
         console.log("Tracker type saved to storage:", trackerType);
     } catch (error) {
         console.error("Error saving tracker type to storage:", error);

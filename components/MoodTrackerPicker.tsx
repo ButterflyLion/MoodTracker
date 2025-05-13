@@ -7,32 +7,44 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import * as colourUtils from "@/assets/utils/colour-utils";
-import * as trackerUtils from "@/assets/utils/tracker-utils";
+import { Colours, generateMoodColors } from "@/assets/utils/colour-utils";
+import {
+  TrackerType,
+  saveTrackerTypeToStorage,
+} from "@/assets/utils/tracker-utils";
 import MoodLoggerGraph from "@/components/MoodLoggerGraph";
 import Slider from "@/components/Slider";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const titleFontSize = Math.min(screenWidth * 0.08, 70);
-const fontSize = Math.max(screenHeight * 0.025, 40);
+const fontSize =
+  screenWidth < 400
+    ? Math.max(screenHeight * 0.02, 20)
+    : Math.max(screenHeight * 0.025, 30);
 const maxWidth = screenWidth * 0.8;
 const borderWidth = Math.min(maxWidth * 0.015, 7);
 const borderRadius = Math.min(maxWidth * 0.05, 20);
 
 const GRAPH_CONTAINER_WIDTH = screenWidth * 0.85;
 const GRAPH_CONTAINER_HEIGHT = screenHeight * 0.55;
-const GRAPH_SIZE = Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT);
+const GRAPH_SIZE =
+  screenWidth < 400
+    ? Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT) * 0.8
+    : Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT);
 
 interface Props {
-  colours: colourUtils.Colours;
+  colours: Colours;
+  trackerType: TrackerType;
+  setTrackerType: (trackerType: TrackerType) => void;
 }
 
-export default function MoodTrackerPicker({ colours }: Props) {
-  const [selectedOption, setSelectedOption] =
-    useState<trackerUtils.TrackerType | null>(null);
+export default function MoodTrackerPicker({
+  colours,
+  trackerType,
+  setTrackerType,
+}: Props) {
   const {
     pleasant,
     mediumPleasantness,
@@ -45,7 +57,7 @@ export default function MoodTrackerPicker({ colours }: Props) {
     mediumLowEnergy,
     lowEnergy,
   } = useMemo(() => {
-    return colourUtils.generateMoodColors({
+    return generateMoodColors({
       pleasant: colours.pleasant,
       unpleasant: colours.unpleasant,
       highEnergy: colours.highEnergy,
@@ -53,9 +65,9 @@ export default function MoodTrackerPicker({ colours }: Props) {
     });
   }, [colours]);
 
-  const handleOptionSelect = (option: trackerUtils.TrackerType) => {
-    setSelectedOption(option);
-    trackerUtils.saveTrackerTypeToStorage(option.option);
+  const handleOptionSelect = (option: TrackerType) => {
+    setTrackerType(option);
+    saveTrackerTypeToStorage(option.option);
   };
 
   return (
@@ -66,7 +78,7 @@ export default function MoodTrackerPicker({ colours }: Props) {
       <TouchableOpacity
         style={[
           styles.optionButton,
-          selectedOption?.option === "both" && styles.selectedOption,
+          trackerType?.option === "both" && styles.selectedOption,
         ]}
         onPress={() => handleOptionSelect({ option: "both" })}
         activeOpacity={0.8}
@@ -124,7 +136,7 @@ export default function MoodTrackerPicker({ colours }: Props) {
       <TouchableOpacity
         style={[
           styles.optionButton,
-          selectedOption?.option === "graph" && styles.selectedOption,
+          trackerType.option === "graph" && styles.selectedOption,
         ]}
         onPress={() => handleOptionSelect({ option: "graph" })}
         activeOpacity={0.8}
@@ -150,7 +162,7 @@ export default function MoodTrackerPicker({ colours }: Props) {
       <TouchableOpacity
         style={[
           styles.optionButton,
-          selectedOption?.option === "slider" && styles.selectedOption,
+          trackerType.option === "slider" && styles.selectedOption,
         ]}
         onPress={() => handleOptionSelect({ option: "slider" })}
         activeOpacity={0.8}

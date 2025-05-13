@@ -22,8 +22,9 @@ interface ColourPickerModalProps {
   graphSize: number;
 }
 
-const { height: height } = Dimensions.get("window");
-const fontSize = Math.max(height * 0.025, 40);
+const { width: width, height: height } = Dimensions.get("window");
+const fontSize =
+  width < 400 ? Math.max(height * 0.02, 20) : Math.max(height * 0.025, 30);
 
 export default function MoodLoggerGraph({
   high_energy,
@@ -231,7 +232,11 @@ export default function MoodLoggerGraph({
 
       {/* Labels */}
       <SvgText
-        x={Math.min(graphSize - fontSize * 5, graphSize - 150)} // Clamp to prevent going off the right edge
+        x={
+          width < 400
+            ? Math.min(graphSize - fontSize * 2.5, graphSize - 80) // Smaller padding for narrow screens
+            : Math.min(graphSize - fontSize * 3, graphSize - 120)
+        }
         y={graphSize / 2 - 10}
         fontFamily="Jua"
         fontSize={fontSize}
@@ -240,7 +245,7 @@ export default function MoodLoggerGraph({
         Positive
       </SvgText>
       <SvgText
-        x={Math.max(fontSize, 20)} // Ensure it doesn't go off the left edge
+        x={width < 400 ? Math.max(fontSize * 0.5, 5) : Math.max(fontSize * 0.5, 20)}
         y={graphSize / 2 - 10}
         fontFamily="Jua"
         fontSize={fontSize}

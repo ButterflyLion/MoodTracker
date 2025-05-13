@@ -5,12 +5,14 @@ import ModalButton from "./ModalButton";
 interface Props {
   steps: React.ReactNode[];
   onFirstNextButtonPress?: () => void;
+  onSecondNextButtonPress?: () => void;
   onDoneButtonPress: () => void;
 }
 
 export default function MultiStepForm({
   steps,
   onFirstNextButtonPress,
+  onSecondNextButtonPress,
   onDoneButtonPress,
 }: Props) {
   const totalSteps = steps.length;
@@ -19,6 +21,8 @@ export default function MultiStepForm({
   const handleNext = () => {
     if (step === 1 && onFirstNextButtonPress) {
       onFirstNextButtonPress();
+    } else if (step === 2 && onSecondNextButtonPress) {
+      onSecondNextButtonPress();
     }
     setStep((prevStep) => Math.min(prevStep + 1, totalSteps));
   };
