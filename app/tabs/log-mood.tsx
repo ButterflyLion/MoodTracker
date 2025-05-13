@@ -23,15 +23,20 @@ import Animated, {
 import MoodLoggerGraph from "@/components/MoodLoggerGraph";
 import Slider from "@/components/Slider";
 import * as colourUtils from "@/assets/utils/colour-utils";
-import { getTrackerType, TrackerType } from "@/assets/utils/tracker-utils";
+import {
+  getTrackerType,
+  savePleasantnessAndEnergyToStorage,
+} from "@/assets/utils/tracker-utils";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { useSearchParams } from "expo-router/build/hooks";
 import { router } from "expo-router";
+import StartButton from "@/components/StartButton";
 
 const { width: width, height: height } = Dimensions.get("window");
 const titleFontSize = Math.max(width * 0.04, 35);
-const fontSize = Math.max(height * 0.025, 40);
+const fontSize =
+  width < 400 ? Math.max(height * 0.02, 20) : Math.max(height * 0.025, 30);
 
 const GRAPH_CONTAINER_WIDTH = width * 0.85;
 const GRAPH_CONTAINER_HEIGHT = height * 0.55;
@@ -425,6 +430,15 @@ export default function MoodTrackerScreen() {
       <GestureHandlerRootView style={styles.container}>
         {renderSelectedTracker()}
       </GestureHandlerRootView>
+      <Text style={styles.sliderLabel}>Pleasantness: {Math.round(pleasantnessState * 100)}%</Text>
+      <Text style={styles.sliderLabel}>Energy: {Math.round((1 - energyState) * 100)}%</Text>
+      <StartButton
+        text="Save"
+        onPress={() => {
+          savePleasantnessAndEnergyToStorage(pleasantnessState, (1 - energyState));
+          router.push("/tabs");
+        }}
+      />
     </ScrollView>
   );
 }
@@ -449,6 +463,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: 20,
     backgroundColor: "#74D4E5",
+    alignItems: "center",
   },
   graphContainer: {
     width: GRAPH_SIZE,
