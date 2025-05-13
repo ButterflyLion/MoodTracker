@@ -26,7 +26,8 @@ import * as colourUtils from "@/assets/utils/colour-utils";
 import { getTrackerType, TrackerType } from "@/assets/utils/tracker-utils";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { useSearchParams } from "expo-router/build/hooks";
+import { router } from "expo-router";
 
 const { width: width, height: height } = Dimensions.get("window");
 const titleFontSize = Math.max(width * 0.04, 35);
@@ -38,6 +39,7 @@ const GRAPH_SIZE = Math.min(GRAPH_CONTAINER_WIDTH, GRAPH_CONTAINER_HEIGHT);
 
 export default function MoodTrackerScreen() {
   const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Start dot in the middle of the graph
   const translateX = useSharedValue(GRAPH_SIZE / 2);
@@ -60,17 +62,45 @@ export default function MoodTrackerScreen() {
   });
   const [trackerType, setTrackerType] = useState("none");
 
+  const params = useSearchParams();
+
   useEffect(() => {
     const fetchData = async () => {
-      const coloursString = await colourUtils.getColours();
-      const typeString = await getTrackerType();
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 5000); // 5 seconds timeout
 
-      const colours = coloursString ? JSON.parse(coloursString) : null;
-      console.log("colours", colours);
-      const type = typeString ? JSON.parse(typeString) : null;
-      console.log("type", type);
-      setMoodTrackerColours(colours);
-      setTrackerType(type);
+      try {
+        const moodTrackerColoursParam = params.get("moodTrackerColours");
+        const trackerTypeParam = params.get("trackerType");
+
+        if (moodTrackerColours && trackerType) {
+          const colours = moodTrackerColoursParam
+            ? JSON.parse(moodTrackerColoursParam)
+            : null;
+          console.log("If colours", colours);
+          const type = trackerTypeParam ?? "none";
+          console.log("If type", type);
+          setMoodTrackerColours(colours);
+          setTrackerType(type);
+        } else {
+          const coloursString = await colourUtils.getColours();
+          const typeString = await getTrackerType();
+
+          const colours = coloursString ? JSON.parse(coloursString) : null;
+          console.log("Else colours", colours);
+          const type = typeString ? JSON.parse(typeString) : null;
+          console.log("Else type", type);
+          setMoodTrackerColours(colours);
+          setTrackerType(type);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        clearTimeout(timeout); // Clear the timeout if data is fetched successfully
+        setIsLoading(false);
+        console.log("Finally block", isLoading);
+      }
     };
     fetchData();
   }, []);
@@ -206,6 +236,10 @@ export default function MoodTrackerScreen() {
 
     offsetX.value = newX;
     offsetY.value = newY;
+  };
+
+  const handleNoneType = () => {
+    router.push("/user-preferences");
   };
 
   const renderSelectedTracker = () => {
@@ -359,6 +393,9 @@ export default function MoodTrackerScreen() {
             </View>
           </>
         );
+      case "none":
+        handleNoneType();
+        return <Text>Invalid tracker selected</Text>;
       default:
         console.log("Invalid tracker selected");
         console.log(trackerType);
@@ -372,6 +409,14 @@ export default function MoodTrackerScreen() {
 
   if (Platform.OS === "web" && !isClient) {
     return null; // Prevents server-side rendering issues on web
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Loading...</Text>
+      </View>
+    );
   }
 
   return (
