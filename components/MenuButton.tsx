@@ -12,9 +12,6 @@ const { width: screenWidth } = Dimensions.get("window");
 const maxWidth = screenWidth * 0.5;
 const maxHeight = Math.max(screenWidth * 0.1, 50);
 
-const borderWidth = Math.min(maxWidth * 0.015, 7);
-const borderRadius = Math.min(maxWidth * 0.05, 20);
-
 interface Props {
   onPress?: (event: GestureResponderEvent) => void;
   text: string;
@@ -28,6 +25,13 @@ export default function MenuButton({ onPress, text, icon, iconSize }: Props) {
   const buttonHeight = isSmallScreen ? maxHeight : maxHeight * 0.55;
   const fontSize = iconSize * 0.85;
 
+  const borderWidth = isSmallScreen
+    ? Math.min(maxWidth * 0.015, 7)
+    : Math.min(maxWidth * 0.01, 5);
+  const borderRadius = isSmallScreen
+    ? Math.min(maxWidth * 0.05, 20)
+    : Math.min(maxWidth * 0.025, 10);
+
   return (
     <TouchableOpacity
       style={[
@@ -37,6 +41,8 @@ export default function MenuButton({ onPress, text, icon, iconSize }: Props) {
           maxWidth: buttonWidth,
           height: buttonHeight,
           maxHeight: buttonHeight,
+          borderWidth: borderWidth,
+          borderRadius: borderRadius,
         },
       ]}
       onPress={onPress}
@@ -46,15 +52,17 @@ export default function MenuButton({ onPress, text, icon, iconSize }: Props) {
         <View
           style={[
             styles.iconContainer,
-            { width: iconSize * 1.5, height: iconSize * 1.5 },
+            {
+              width: iconSize * 1.5,
+              height: iconSize * 1.5,
+              borderWidth: borderWidth,
+              borderRadius: borderRadius,
+            },
           ]}
         >
           {icon}
         </View>
-        <Text
-          style={[styles.text, { fontSize: fontSize }]}>
-          {text}
-        </Text>
+        <Text style={[styles.text, { fontSize: fontSize }]}>{text}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -65,8 +73,6 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "center",
-    borderRadius: borderRadius,
-    borderWidth: borderWidth,
     borderColor: "#25292E",
     position: "relative",
     margin: 10,
@@ -80,8 +86,6 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     backgroundColor: "#20B8D2",
-    borderRadius: borderRadius,
-    borderWidth: borderWidth,
     borderColor: "#25292E",
     position: "relative",
     display: "flex",

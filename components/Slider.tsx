@@ -74,8 +74,6 @@ export default function Slider({
   });
 
   const thumbContainerRatio = 44 / 34;
-  const thumbImageRatio = 34 / 26;
-  const thumbWidth = buttonHeight * thumbImageRatio;
   const thumbHeight = buttonHeight;
 
   const [gradientId] = useState(
