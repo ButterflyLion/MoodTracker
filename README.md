@@ -3,8 +3,7 @@
 This project is a customizable mood tracking application built using [Expo](https://expo.dev/) and [React Native](https://reactnative.dev/). It is designed to provide an inclusive and visually engaging way to track moods (inspired by the valence-arousal model). The app has a unique interface where users can select personalized theme colours for different mood states and select their preferred interactive component for logging - graphs and sliders. These choices are then reflected in the UI, providing each user with their own custom mood-tracking experience.
 
 ## Author
-GitHub: @ButterflyLion
-Name (student number): Tamara Orosz (22354646)
+Tamara Orosz (22354646)
 
 ## Features
 
@@ -18,21 +17,13 @@ Name (student number): Tamara Orosz (22354646)
 Start Screen | Customizing colours | Picking a colour
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](/assets/screenshots/1.jpg) | ![](/assets/screenshots/2.jpg) | ![](/assets/screenshots/3.jpg)
-:-------------------------:|:-------------------------:|:-------------------------:
 Default colours chosen | Picking tracker component 1 | Picking tracker component 2
-:-------------------------:|:-------------------------:|:-------------------------:
 ![](/assets/screenshots/4.jpg) | ![](/assets/screenshots/5.jpg) | ![](/assets/screenshots/6.jpg)
-:-------------------------:|:-------------------------:|:-------------------------:
 Tracker component selected | Graph + Sliders | Graph + Sliders
-:-------------------------:|:-------------------------:|:-------------------------:
 ![](/assets/screenshots/7.jpg) | ![](/assets/screenshots/8.jpg) | ![](/assets/screenshots/9.jpg)
-:-------------------------:|:-------------------------:|:-------------------------:
 Logged mood values | Sliders | Graph
-:-------------------------:|:-------------------------:|:-------------------------:
 ![](/assets/screenshots/10.jpg) | ![](/assets/screenshots/11.jpg) | ![](/assets/screenshots/12.jpg)
-:-------------------------:|:-------------------------:|:-------------------------:
 Menu | |
-:-------------------------:|:-------------------------:|:-------------------------:
 ![](/assets/screenshots/13.jpg)
 
 ## App Flow
@@ -41,7 +32,7 @@ Menu | |
    - User picks preferred interactive mood model: graph and sliders, graph only or sliders only
 
 2. **Subsequent Launches**
-   - User logs their mood using their customized interface
+   - User logs their mood using their custom interface
 
 ## Getting Started
 
