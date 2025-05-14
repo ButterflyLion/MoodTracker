@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import ModalButton from "./ModalButton";
+import ModalButton from "./buttons/ModalButton";
 
 interface Props {
   steps: React.ReactNode[];

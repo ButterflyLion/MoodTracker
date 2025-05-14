@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { getColours } from "@/assets/utils/colour-utils";
 import { getTrackerType } from "@/assets/utils/tracker-utils";
 import OtterDisplay from "@/components/OtterDisplay";
-import StartButton from "@/components/StartButton";
+import StartButton from "@/components/buttons/StartButton";
 
 export default function HomeScreen() {
   const router = useRouter();

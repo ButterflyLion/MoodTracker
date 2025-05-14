@@ -3,7 +3,7 @@ import { View, Text, Dimensions, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { getColours } from "@/assets/utils/colour-utils";
 import { getTrackerType } from "@/assets/utils/tracker-utils";
-import MenuButton from "@/components/MenuButton";
+import MenuButton from "@/components/buttons/MenuButton";
 import OtterDisplay from "@/components/OtterDisplay";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Entypo from "@expo/vector-icons/Entypo";

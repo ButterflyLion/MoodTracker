@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import * as colourUtils from "@/assets/utils/colour-utils";
 import ColourPickerModal from "@/components/ColourPickerModal";
-import ColourPickerButton from "@/components/ColourPickerButton";
-import ModalButton from "@/components/ModalButton";
+import ColourPickerButton from "@/components/buttons/ColourPickerButton";
+import ModalButton from "@/components/buttons/ModalButton";
 
 interface Props {
   colours: colourUtils.Colours;

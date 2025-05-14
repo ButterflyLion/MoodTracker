@@ -6,10 +6,10 @@ import { type ImageSource } from "expo-image";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as MediaLibrary from "expo-media-library";
 
-import Button from "@/components/Button";
+import Button from "@/components/buttons/Button";
 import ImageViewer from "@/components/ImageViewer";
-import IconButton from "@/components/IconButton";
-import CircleButton from "@/components/CircleButton";
+import IconButton from "@/components/buttons/IconButton";
+import CircleButton from "@/components/buttons/CircleButton";
 import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";

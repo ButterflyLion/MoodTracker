@@ -31,7 +31,7 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { useSearchParams } from "expo-router/build/hooks";
 import { router } from "expo-router";
-import StartButton from "@/components/StartButton";
+import StartButton from "@/components/buttons/StartButton";
 
 const { width: width, height: height } = Dimensions.get("window");
 const titleFontSize = Math.max(width * 0.04, 35);

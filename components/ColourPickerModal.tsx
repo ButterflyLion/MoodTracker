@@ -6,7 +6,7 @@ import ColorPicker, {
   HueSlider,
 } from "reanimated-color-picker";
 import * as colourUtils from "@/assets/utils/colour-utils";
-import ModalButton from "@/components/ModalButton";
+import ModalButton from "@/components/buttons/ModalButton";
 
 export default function ColourPickerModal({
   showModal,
