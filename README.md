@@ -1,50 +1,105 @@
-# Welcome to your Expo app 👋
+# MoodTracker: Universal Mood Tracking with Customizable Visual Representations
+## Project Overview
+This project is a customizable mood tracking application built using [Expo](https://expo.dev/) and [React Native](https://reactnative.dev/). It is designed to provide an inclusive and visually engaging way to track moods (inspired by the valence-arousal model). The app has a unique interface where users can select personalized theme colours for different mood states and select their preferred interactive component for logging - graphs and sliders. These choices are then reflected in the UI, providing each user with their own custom mood-tracking experience.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Author
+GitHub: @ButterflyLion
+Name (student number): Tamara Orosz (22354646)
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Customizable Mood Colors**: Personalize the app's appearance by selecting colors for different mood states (e.g., pleasant, unpleasant, high energy, low energy).
+- **Interactive Graphs**: Drag or tap on a graph to log your mood visually.
+- **Precision Sliders**: Adjust mood values with sliders for more granular control.
+- **Dual Interaction Modes**: Use the graph, sliders, or both to track your mood.
+- **Persistent Preferences**: Saves and retrieves user preferences (colors, tracker type, and mood values) using AsyncStorage for returning users.
 
+## Screenshots
+Start Screen | Customizing colours | Picking a colour
+:-------------------------:|:-------------------------:|:-------------------------:
+![](/assets/screenshots/1.jpg) | ![](/assets/screenshots/2.jpg) | ![](/assets/screenshots/3.jpg)
+:-------------------------:|:-------------------------:|:-------------------------:
+Default colours chosen | Picking tracker component 1 | Picking tracker component 2
+:-------------------------:|:-------------------------:|:-------------------------:
+![](/assets/screenshots/4.jpg) | ![](/assets/screenshots/5.jpg) | ![](/assets/screenshots/6.jpg)
+:-------------------------:|:-------------------------:|:-------------------------:
+Tracker component selected | Graph + Sliders | Graph + Sliders
+:-------------------------:|:-------------------------:|:-------------------------:
+![](/assets/screenshots/7.jpg) | ![](/assets/screenshots/8.jpg) | ![](/assets/screenshots/9.jpg)
+:-------------------------:|:-------------------------:|:-------------------------:
+Logged mood values | Sliders | Graph
+:-------------------------:|:-------------------------:|:-------------------------:
+![](/assets/screenshots/10.jpg) | ![](/assets/screenshots/11.jpg) | ![](/assets/screenshots/12.jpg)
+:-------------------------:|:-------------------------:|:-------------------------:
+Menu | |
+:-------------------------:|:-------------------------:|:-------------------------:
+![](/assets/screenshots/13.jpg)
+
+## App Flow
+1. **First Launch** 
+   - User picks theme colours for pleasant, unpleasant, high energy, low energy
+   - User picks preferred interactive mood model: graph and sliders, graph only or sliders only
+
+2. **Subsequent Launches**
+   - User logs their mood using their customized interface
+
+## Getting Started
+
+### Prerequisites
+
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ButterflyLion/MoodTracker.git
+   cd MoodTracker
+   ```
+
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Start the app:
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. Open the app using:
+   - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+   - [Expo Go](https://expo.dev/go) on your mobile device.
+   - An [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/) or [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/).
+   In the output, you'll find options to open the app in a
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **`app/`**: Contains the main screens of the app.
+  - `tabs/log-mood.tsx`: The main mood tracking screen with graph and slider interactions.
+  - `user-preferences.tsx`: The screen for customizing mood colors and selecting tracker types.
+- **`components/`**: Reusable components like `MoodLoggerGraph`, `Slider`, `MoodTrackerColourPicker`, and `MoodTrackerPicker`.
+- **`components/buttons/`**: All the button components used throughout the application.
+- **`assets/utils/`**: Utility files for managing colors (`colour-utils.ts`) and tracker types (`tracker-utils.ts`).
 
-## Get a fresh project
+## Customization
 
-When you're ready, run:
+### Mood Colors
+Users can customize mood colors through the **MoodTrackerColourPicker** component. Default colors are provided, but users can select their own or reset to defaults.
 
-```bash
-npm run reset-project
-```
+### Tracker Type
+Users can choose between:
+- **Graph**: Visual interaction with a draggable point.
+- **Sliders**: Precise adjustments using sliders.
+- **Both**: A combination of graph and sliders.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Persistent Data
 
-## Learn more
+The app uses **AsyncStorage** to save and retrieve:
+- Mood colors.
+- Tracker type.
+- Last logged mood values (pleasantness and energy).
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This ensures user preferences are retained across sessions.
